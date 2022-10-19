@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  machine-sim:
+    build:
+        context: ./machine-sim/
+    network_mode: bridge # use default bridge network to get defualt ip adress space 172.17.0.X
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+
+  tcp-server:
+    build:
+        context: ./tcp-server/
+    depends_on:
+      - machine-sim
+    expose:
+      - 7002
+    network_mode: bridge # use default bridge network to get defualt ip adress space 172.17.0.X
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
