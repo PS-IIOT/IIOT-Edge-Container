@@ -1,0 +1,24 @@
+#!/bin/bash
+
+MESSAGE=$(cat $1)
+
+MAX_LENGTH=50
+TYPES="docs feat fix refactor revert style test"
+PATTERN="^([a-z]+)(\([a-z\-\*]+\)){0,1}\:[[:space:]](.*[^\.!?])(\n[^[:space:]].*[^\.!?]){0,1}$"
+
+
+if [[ ${#MESSAGE} > $MAX_LENGTH ]]; then
+     echo "ERROR: Commit message was ${#MESSAGE} characters long, but should be at most $MAX_LENGTH characters"
+     exit 1
+fi
+
+if ! [[ $MESSAGE =~ $PATTERN ]]; then
+    echo "ERROR: Commit message did not match 'type(scope): subject'"
+    exit 1
+fi
+TYPE=${BASH_REMATCH[1]}
+
+if ! [[ $TYPES =~ (^|[[:space:]])$TYPE($|[[:space:]]) ]] ; then
+    echo "ERROR: Commit message's type '$TYPE' must be one of '$TYPES'"
+    exit 1
+fi
