@@ -1,8 +1,8 @@
 import socket
-import json
+from json import *
 from collections import deque
 import argparse
-
+from datetime import *
 
 
 class Dataconverter:
@@ -10,14 +10,11 @@ class Dataconverter:
              self.que = deque()         #Using List as Que becaus we need FiFo
              self.conv_list = []
 
-        def store_que(self,data):
+        def store_que(self,data,timestamp):
             self.que.append(data)
-            #for i in self.que:
-                #print("Que of JSON Objects" + str(i))
-            self.conversion()
-        def conversion(self):
-            for i in range(1,len(self.que)):
-                json_object:json = self.que.popleft()
+            self.conversion(timestamp)
+        def conversion(self,timestamp):
+                json_object = dict(loads(self.que.popleft()))
                 meas_data = {
                         "data": {
                                 "measurement": "machinedata",
@@ -32,9 +29,14 @@ class Dataconverter:
                                 }]
                             }
                         }
-                meas_data["data"][2]["uptime"]=json_object["data"][7]
+                meas_data['data']['tags']['serialnumber'] = json_object['data'][0]
+                meas_data['data']['values'][0]['temp'] = json_object['data'][6]
+                meas_data['data']['values'][0]['uptime'] = json_object['data'][7]
+                meas_data['data']['values'][0]['cycle'] = json_object['data'][8]
+                meas_data['data']['values'][0]['ts'] = str(timestamp)
                 self.conv_list.append(meas_data)
-            
+                for i in range(len(self.conv_list)):
+                    print(str(self.conv_list[i])+"\n")
 
 
             
@@ -53,7 +55,10 @@ class Tcpsocket:
                 print(f"Connected by {addr}")                           
                 while True:
                     data = conn.recv(1024)                             #data is the JSON object that got send 
-                    Dc.store_que(data)
+                    dt = datetime.now()
+                    ts = str(dt.isoformat('T'))
+                    tu = ts[:len(str(ts))-3]+'Z'
+                    Dc.store_que(data,tu)
                     if not data:
                         break
                     conn.sendall(data)
