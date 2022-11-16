@@ -1,5 +1,5 @@
 import socket
-from json import *
+import json
 from collections import deque
 import argparse
 from datetime import *
@@ -15,15 +15,16 @@ class Dataconverter:
             self.que.append(data)
             self.conversion(timestamp)
         def conversion(self,timestamp):
-            json_object = dict(loads(self.que.popleft()))
-            meas_data = {"data": {"measurement": "machinedata","tags": {"serialnumber": str},"values": [{"ts": str,"uptime": int,"temp": float,"cycle": int}]}}
-            meas_data['data']['tags']['serialnumber'] = json_object['data'][0]
-            meas_data['data']['values'][0]['temp'] = json_object['data'][6]
-            meas_data['data']['values'][0]['uptime'] = json_object['data'][7]
-            meas_data['data']['values'][0]['cycle'] = json_object['data'][8]
-            meas_data['data']['values'][0]['ts'] = str(timestamp)
-            self.conv_list.append(meas_data)
-            print("Converted JSON Object :"+ str(self.conv_list[len(self.conv_list)-1])+"\n")
+            json_object = json.loads(self.que.popleft())
+            data = {"data": {"measurement": "machinedata","tags": {"serialnumber": str},"values": [{"ts": str,"uptime": int,"temp": float,"cycle": int}]}}
+            data['data']['tags']['serialnumber'] = json_object['data'][0]
+            data['data']['values'][0]['temp'] = json_object['data'][6]
+            data['data']['values'][0]['uptime'] = json_object['data'][7]
+            data['data']['values'][0]['cycle'] = json_object['data'][8]
+            data['data']['values'][0]['ts'] = str(timestamp)
+            conv_json_object = json.dumps(data)
+            self.conv_list.append(conv_json_object)
+            print("Converted JSON Object :"+ self.conv_list[len(self.conv_list)-1]+"\n")
             
 
 
@@ -34,7 +35,7 @@ class Tcpsocket:
     def __init__(self,ip='127.0.0.1',port=7002) -> None:
         self.HOST = ip
         self.PORT = port
-    def connect(self,Dc: Dataconverter)->None:
+    def listen(self,Dc: Dataconverter)->None:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:    #Creates socket-object with alias s
             s.bind((self.HOST, self.PORT))                              #Binds the socket-object to the Ip and Port defined above
             s.listen()                                                  #The socket-object will listen to the Port and Ip-Adress
@@ -57,4 +58,4 @@ class Tcpsocket:
 if __name__ == '__main__':
     Sock = Tcpsocket()
     Dc = Dataconverter()
-    Sock.connect(Dc)
+    Sock.listen(Dc)
