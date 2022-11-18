@@ -22,9 +22,18 @@ class Dataconverter:
             data['data']['values'][0]['uptime'] = json_object['data'][7]
             data['data']['values'][0]['cycle'] = json_object['data'][8]
             data['data']['values'][0]['ts'] = str(timestamp)
-            conv_json_object = json.dumps(data)
+            conv_json_object = data
             self.conv_list.append(conv_json_object)
-            print("Converted JSON Object :"+ self.conv_list[len(self.conv_list)-1]+"\n")
+            self.last_state("Last_converted_JSON.json",conv_json_object)
+            #print("Converted JSON Object :"+ self.conv_list[len(self.conv_list)-1]+"\n")
+        
+        def last_state(self,filename,data):
+            try:
+                with open(filename, "w") as outfile:
+                    json.dump(data, outfile)
+            except Exception as e:
+                print(("Exception saving state: %s" % str(e)))
+
             
 
 
