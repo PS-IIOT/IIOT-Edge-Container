@@ -3,9 +3,10 @@ import json
 import os
 
 class Dataconverter:
-    def __init__(self) -> None:
+    def __init__(self, rpc) -> None:
         self.que = deque()         #Using List as Que becaus we need FiFo if we use more then one machine
         self.conv_list = []
+        self.rpc = rpc
             
     def store_que(self,data,timestamp):
         self.que.append(data)
@@ -23,6 +24,7 @@ class Dataconverter:
         conv_json_object = data
         self.conv_list.append(conv_json_object)
         self.last_state(f"{json_object['data'][0]}.json",conv_json_object)
+        self.rpc.send_data(conv_json_object)
         #print(threading.active_count())
         print("Converted JSON Object :"+ str(self.conv_list[len(self.conv_list)-1])+"\n")
         
