@@ -11,24 +11,41 @@ class Rpcconnection:
         self.PORT = os.getenv('port')
         self.user = os.getenv('user')
         self.password = os.getenv('password')
-        i = 1
+        self.sid = None
+        self.count = 1
+
+    def increment(self):
+        self.count +=1
 
     def session_create(self):
-        json_login = {"id": str,"jsonrpc": str,"method": str,"params":[str, str, str, {"user": str,"password": str}]}
-        json_login["id"] = i
-        i+=1
-        json_login["jsonrpc"] = "2.0"
-        json_login["method"] = "call"
-        json_login["params"][0] = "00000000000000000000000000000000"
-        json_login["params"][1] = "session"
-        json_login["params"][2] = "create"
-        json_login["params"][3]["user"] = self.user
-        json_login["params"][3]["password"] = self.password
-        login = requests.post(self.HOST, json=json_login)
+        login_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {"user": str,"password": str}]}
+        login_json["id"] = self.count
+        self.increment()
+        login_json["params"][0] = "00000000000000000000000000000000"
+        login_json["params"][1] = "session"
+        login_json["params"][2] = "create"
+        login_json["params"][3]["user"] = self.user
+        login_json["params"][3]["password"] = self.password
+        login = requests.post(self.HOST, json=login_json)
         json_response = login.json()
-        sid = json_response["result"][1]["sid"]
-        return sid
+        self.sid = json_response["result"][1]["sid"]
+
+    def blxpush_push(self, push_data):
+        if not self.sid:
+            self.session_create()
+        push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, push_data]}
+        push_json["id"] = self.count
+        self.increment()
+        push_json["params"][0] = self.sid
+        push_json["params"][1] = "blxpush"
+        push_json["params"][2] = "push"
+        push = requests.post(self.HOST, json=push_json)
+        push_response = push.json()
+        if "error" in push_response:
+            print("error message: ", push_response["error"]["message"])
+            self.sid = None
+            self.blxpush_push(push_data)
 
 
     def send_data(self, converted_data):
-        self.session_create()
+        self.blxpush_push(converted_data)
