@@ -5,12 +5,11 @@ import requests
 
 class Rpcconnection:
     def __init__(self):
-        dotenv_path = Path('backend\pers_data.env')
+        dotenv_path = Path('backend\.env')
         load_dotenv(dotenv_path=dotenv_path)
-        self.HOST = os.getenv('url')
-        self.PORT = os.getenv('port')
-        self.user = os.getenv('user')
-        self.password = os.getenv('password')
+        self.HOST = os.getenv('RPC_URL')
+        self.user = os.getenv('RPC_USER')
+        self.password = os.getenv('RPC_PASSWORD')
         self.sid = None
         self.count = 1
 
