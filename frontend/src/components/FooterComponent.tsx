@@ -1,5 +1,5 @@
 export const FooterComponent = () => {
     return (
-        <div className="bg-[#6B94B1] absolute inset-x-0 bottom-0 h-16"></div>
+        <div className="mb-auto w-screen h-16 bg-ColorFooterBackground"></div>
     );
 };
