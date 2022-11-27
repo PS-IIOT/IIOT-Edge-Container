@@ -11,24 +11,24 @@ class Tcpsocket:
         self.server.bind((self.HOST, self.PORT))
         self.connect = True
     
-    def handle_client(self,conn:socket.socket,Dc): 
+    def handle_client(self, conn:socket.socket, data_handler): 
         while self.connect:
             data = conn.recv(1024)
             if not data:
                 self.connect = False  
-            Dc.store_que(data,self.timestamp())
+            data_handler.store_que(data,self.timestamp())
             conn.send(data)
-            Dc.printConv_list()
+            data_handler.printConv_list()
         conn.close()
         #print(threading.active_count())
     
-    def listen(self, Dc)->None:                         
+    def listen(self, data_handler)->None:                         
         try:
             self.server.listen()
             while True:
                 conn, addr = self.server.accept()
                 print(f"Connected by {addr}")
-                thread = threading.Thread(target=self.handle_client,args=(conn,Dc))
+                thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
                 thread.start()
         except KeyboardInterrupt:
             print ('Interrupted')

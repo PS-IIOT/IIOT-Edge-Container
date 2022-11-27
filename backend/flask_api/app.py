@@ -1,9 +1,8 @@
-
 from flask import Flask
 from flask_restful import Resource, Api
 from flask import current_app as app
 
-app = Flask('webserver')
+app = Flask('api')
 api = Api(app)
 
 class AllMachines(Resource):
