@@ -26,7 +26,16 @@ class Datahandler:
         print("Converted JSON Object :" +
               str(self.conv_que[len(self.conv_que)-1])+"\n")
         # FIXME: Jeder Thread soll seine zeile in der DB wieder übeschreiben
-        Database.insert('mymaschine', conv_json_object)
+        serialno = conv_json_object['tags']['serialnumber']
+        """ serialno = conv_json_object['tags']['serialnumber']
+        colnames = Database.listCollectionNames('machineData')
+        if serialno in colnames:
+            Database.update(serialno, conv_json_object)
+        else:
+            Database.insert(serialno, conv_json_object)"""
+
+        Database.replace(serialno, conv_json_object)
+
     """ def last_state(self,filename,data):
         folder_name = "latest-states/"
         os.makedirs(os.path.dirname(folder_name), exist_ok=True)
