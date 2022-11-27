@@ -45,6 +45,5 @@ class Rpcconnection:
             self.sid = None
             self.blxpush_push(push_data)
 
-
     def send_data(self, converted_data):
         self.blxpush_push(converted_data)
