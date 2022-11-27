@@ -4,7 +4,7 @@ import os
 
 class Dataconverter:
     def conversion(self, timestamp, data):
-        json_object = json.loads(self.que.popleft())
+        json_object = json.loads(data)
         data = {"measurement": str,"tags": {"serialnumber": str},"values": [{"ts": str,"uptime": int,"temp": float,"cycle": int}]}
         data["measurement"] = json_object['data'][0]
         data['tags']['serialnumber'] = json_object['data'][0]

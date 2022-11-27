@@ -1,9 +1,9 @@
-import tcp_server
-import data_handler
-import rpc_connection
+import deamon.data_handler
+import deamon.tcp_server
+#import deamon.rpc_connection
 
 def start():
-    sock = tcp_server.Tcpsocket()
-    rpc = rpc_connection.Rpcconnection()
-    data_handler = data_handler.Datahandler(rpc)
-    sock.listen(data_handler)
+    sock = deamon.tcp_server.Tcpsocket()
+    #rpc = deamon.rpc_connection.Rpcconnection()
+    data_h = deamon.data_handler.Datahandler()
+    sock.listen(data_h)
