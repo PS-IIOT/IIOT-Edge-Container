@@ -22,7 +22,7 @@ class Datahandler:
             timestamp, self.que.popleft())
         self.conv_que.append(conv_json_object)
         # self.last_state(f"{json_object['data'][0]}.json",conv_json_object)
-        # self.rpc.send_data(conv_json_object)
+        self.rpc.send_data(conv_json_object)
         print("Converted JSON Object :" +
               str(self.conv_que[len(self.conv_que)-1])+"\n")
         # FIXME: Jeder Thread soll seine zeile in der DB wieder übeschreiben
