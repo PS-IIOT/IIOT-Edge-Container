@@ -12,17 +12,9 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
-    "overrides": [
-        {
-            "files": ["*.config.cjs"],
-            "env": {
-                "node": true
-            }
-        }
-    ],
+
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -33,10 +25,32 @@
     },
     "plugins": ["react", "@typescript-eslint", "prettier"],
     "rules": {
-        "indent": ["error", 4],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
         "react/react-in-jsx-scope": "off"
-    }
+    },
+    "ignorePatterns": ["node_modules/", "dist/", "build/"],
+    "overrides": [
+        {
+            "files": ["*.config.cjs"],
+            "env": {
+                "node": true
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": [
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking"
+            ],
+            "parserOptions": {
+                "project": ["./tsconfig.json"]
+            },
+            "rules": {
+                "@typescript-eslint/no-unnecessary-condition": "error",
+                "@typescript-eslint/array-type": [
+                    "error",
+                    { "default": "array-simple" }
+                ]
+            }
+        }
+    ]
 }
