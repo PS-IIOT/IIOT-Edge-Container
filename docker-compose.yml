@@ -18,3 +18,17 @@ services:
     network_mode: bridge # use default bridge network to get defualt ip adress space 172.17.0.X
     stdin_open: true # docker run -i
     tty: true # docker run -t
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+    external: false
