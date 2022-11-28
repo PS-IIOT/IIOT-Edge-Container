@@ -30,7 +30,6 @@ export const Card = ({
     cycles,
     upTime,
 }: MachineData) => {
-    const [newState, setNewState] = useState(Boolean);
     const [data, setData] = useState({ machineID, temparture, cycles, upTime });
     machineID = data.machineID;
     temparture = data.temparture;

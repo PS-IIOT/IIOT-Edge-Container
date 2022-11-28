@@ -9,7 +9,7 @@ const MachineData = [
     { MachineID: '7', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
     { MachineID: '8', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
     { MachineID: '9', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
-    // { MachineID: '10', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
+    { MachineID: '10', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
     // { MachineID: '6', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
     // { MachineID: '7', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },
     // { MachineID: '8', Temparture: 30, cycle: 22314123, runTime: '03:49:30' },

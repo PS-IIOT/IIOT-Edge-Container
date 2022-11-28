@@ -1,7 +1,7 @@
-const status = {
-    online: true,
-    offline: false,
-};
+// const status = {
+//     online: true,
+//     offline: false,
+// };
 export const HeaderComponent = () => {
     return (
         <div className=" flex justify-between items-center w-screen h-20 bg-ColorHeaderBackground">
