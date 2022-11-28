@@ -2,17 +2,23 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
+
 def create_app():
     with app.app_context():
         app.run()
+
 
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
 
 mongo = PyMongo(app)
 db = mongo.db
-    
+
+
 @app.route('/api/v1/machines', methods=['GET'])
 def getAll():
     collist = db.list_collection_names()
