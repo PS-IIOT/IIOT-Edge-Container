@@ -30,14 +30,13 @@ export const Card = ({
     cycles,
     upTime,
 }: MachineData) => {
+    const [newState, setNewState] = useState(Boolean);
     const [data, setData] = useState({ machineID, temparture, cycles, upTime });
     machineID = data.machineID;
     temparture = data.temparture;
     cycles = data.cycles;
     upTime = data.upTime;
     useEffect(() => {
-        fetch(``)
-        .then()
         setData({ machineID, temparture, cycles, upTime });
     }, [machineID, temparture, cycles, upTime]);
     return (
