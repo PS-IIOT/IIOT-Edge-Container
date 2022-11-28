@@ -1,12 +1,8 @@
-// const status = {
-//     online: true,
-//     offline: false,
-// };
 export const HeaderComponent = () => {
     return (
         <div className=" flex justify-between items-center w-screen h-20 bg-ColorHeaderBackground">
             <div className="w-auto h-auto m-5">
-                <span className=" font-bold text-4xl italic bg-clip-text text-transparent bg-gradient-to-r text-white ">
+                <span className="font-bold text-4xl italic text-white">
                     IRF - 1000
                 </span>
             </div>
