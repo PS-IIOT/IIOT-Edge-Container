@@ -20,17 +20,13 @@ class Tcpsocket:
         sock_object.close()
     
     def listen(self, data_handler)->None:                         
-        try:
-            self.server.listen()
-            while True:
-                sock_object, addr = self.server.accept()
-                print(f"Connected by {addr}")
-                thread = threading.Thread(target=self.handle_client,args=(sock_object, data_handler))
-                thread.start()
-        except KeyboardInterrupt:
-            print ('Interrupted')
-            sys.exit(0)
-            
+        self.server.listen()
+        while True:      
+            sock_object, addr = self.server.accept()
+            print(f"Connected by {addr}")
+            thread = threading.Thread(target=self.handle_client,args=(sock_object, data_handler))
+            thread.start()
+       
     def timestamp(self):
         dtn = datetime.now()
         dtif = str(dtn.isoformat('T'))
