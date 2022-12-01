@@ -8,7 +8,7 @@ from .database import Database
 
 class Datahandler:
     def __init__(self, rpc) -> None:
-        self.que = deque()  # Using List as Que becaus we need FiFo if we use more then one machine
+        self.que = deque()  
         self.conv_que = deque()
         self.rpc = rpc
         self.data_converter = Dataconverter()
@@ -21,29 +21,15 @@ class Datahandler:
         conv_json_object = self.data_converter.conversion(
             timestamp, self.que.popleft())
         self.conv_que.append(conv_json_object)
-        # self.last_state(f"{json_object['data'][0]}.json",conv_json_object)
-        self.rpc.send_data(conv_json_object)
-        print("Converted JSON Object :" +
-              str(self.conv_que[len(self.conv_que)-1])+"\n")
-        # FIXME: Jeder Thread soll seine zeile in der DB wieder übeschreiben
-        serialno = conv_json_object['tags']['serialnumber']
-        """ serialno = conv_json_object['tags']['serialnumber']
-        colnames = Database.listCollectionNames('machineData')
-        if serialno in colnames:
-            Database.update(serialno, conv_json_object)
-        else:
-            Database.insert(serialno, conv_json_object)"""
-
-        Database.replace(serialno, conv_json_object)
-
-    """ def last_state(self,filename,data):
-        folder_name = "latest-states/"
-        os.makedirs(os.path.dirname(folder_name), exist_ok=True)
         try:
-            with open("./latest-states/"+filename, "w") as outfile:
-                json.dump(data, outfile)
+            self.rpc.send_data(conv_json_object)
         except Exception as e:
-            print(("Exception saving state: %s" % str(e))) """
+            print(f"Failed to send Data: {e}")
+        
+        print("Converted JSON Object :" +
+            str(self.conv_que[len(self.conv_que)-1])+"\n")
+        serialno = conv_json_object['tags']['serialnumber']
+        Database.replace(serialno, conv_json_object)
 
     def printConv_list(self):
         print(f"Liste aller Konvertierten Daten{self.conv_que}")

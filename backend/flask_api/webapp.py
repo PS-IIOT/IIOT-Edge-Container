@@ -4,12 +4,7 @@ from bson.json_util import dumps, loads
 import json
 
 app = Flask(__name__)
-def create_app():
-    with app.app_context():
-        app.run()
-
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
-
 mongo = PyMongo(app)
 db = mongo.db
     
@@ -24,7 +19,6 @@ def getAll():
         datalist.append(json.loads(json_data))
     return datalist
 
-
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
 def getMachine(serialnumber):
     cursor = db[serialnumber].find({'measurement': serialnumber})
@@ -32,3 +26,7 @@ def getMachine(serialnumber):
     json_data = dumps(list_cur[0])
     print(str(json_data))
     return json_data
+
+def create_app():
+    with app.app_context():
+        app.run()
