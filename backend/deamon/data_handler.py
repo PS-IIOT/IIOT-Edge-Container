@@ -8,7 +8,7 @@ from .database import Database
 
 class Datahandler:
     def __init__(self, rpc) -> None:
-        self.que = deque()  # Using List as Que becaus we need FiFo if we use more then one machine
+        self.que = deque()
         self.rpc = rpc
         self.data_converter = Dataconverter()
 

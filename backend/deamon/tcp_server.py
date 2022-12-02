@@ -26,8 +26,13 @@ class Tcpsocket:
         self.server.listen()
         while True:
             conn, addr = self.server.accept() 
-            cursor = Database.find_ip("Ip_whitelist")
-            ip_adresses = cursor["Ip_Adresses"]
+            if "Ip_whitelist" in Database.listCollectionNames():
+                cursor = Database.find_ip("Ip_whitelist")
+                ip_adresses = cursor["Ip_Adresses"]
+            else:
+                Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1","69696969"]})
+                cursor = Database.find_ip("Ip_whitelist")
+                ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
                 thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
