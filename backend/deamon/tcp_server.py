@@ -30,7 +30,7 @@ class Tcpsocket:
                 cursor = Database.find_ip("Ip_whitelist")
                 ip_adresses = cursor["Ip_Adresses"]
             else:
-                Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1","69696969"]})
+                Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1","187.69.69.1"]})
                 cursor = Database.find_ip("Ip_whitelist")
                 ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:

@@ -40,14 +40,13 @@ class Database(object):
     def listCollectionNames():
         return Database.DATABASE.list_collection_names()
 
-
     @staticmethod
     def find_ip(collection):
         return Database.DATABASE[collection].find_one()
 
     @staticmethod
     def create_Collection(collection):
-        Database.DATABASE.create_collection(collection,)
+        Database.DATABASE.create_collection(collection)
     
     @staticmethod
     def insertOne(collection,data):
