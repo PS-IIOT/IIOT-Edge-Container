@@ -8,8 +8,7 @@ from .database import Database
 
 class Datahandler:
     def __init__(self, rpc) -> None:
-        self.que = deque()  
-        self.conv_que = deque()
+        self.que = deque()  # Using List as Que becaus we need FiFo if we use more then one machine
         self.rpc = rpc
         self.data_converter = Dataconverter()
 
@@ -18,18 +17,13 @@ class Datahandler:
         self.conversion(timestamp)
 
     def conversion(self, timestamp):
-        conv_json_object = self.data_converter.conversion(
-            timestamp, self.que.popleft())
-        self.conv_que.append(conv_json_object)
-        try:
-            self.rpc.send_data(conv_json_object)
-        except Exception as e:
-            print(f"Failed to send Data: {e}")
         
-        print("Converted JSON Object :" +
-            str(self.conv_que[len(self.conv_que)-1])+"\n")
-        serialno = conv_json_object['tags']['serialnumber']
-        Database.replace(serialno, conv_json_object)
-
-    def printConv_list(self):
-        print(f"Liste aller Konvertierten Daten{self.conv_que}")
+        temp = self.que.popleft()
+        conv_json_object_rpc = self.data_converter.conversion_rpc(timestamp, temp)
+        conv_json_object_db = self.data_converter.conversion_db(timestamp,temp)
+        try:
+            self.rpc.send_data(conv_json_object_rpc)
+        except Exception as e:
+            print(f"Failed to send Data {e}")
+        serialno = conv_json_object_db["serialnumber"]
+        Database.replace(serialno, conv_json_object_db)
