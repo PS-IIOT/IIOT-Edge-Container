@@ -119,8 +119,16 @@ type Machine = {
             temp: number;
             ts: string;
             uptime: number;
+            status: boolean;
         }
     ];
+};
+const test = {
+    machineID: '',
+    temparture: 0,
+    cycles: 0,
+    uptime: 0,
+    status: false,
 };
 
 // Liste aller Konvertierten Datendeque([{'measurement': 'Micha', 'tags': {'serialnumber': 'Micha'}, 'values': [{'ts': '2022-12-01T12:15:08.486Z', 'uptime': 74, 'temp': 20.555555555555557, 'cycle': 1070}]}])
@@ -169,10 +177,19 @@ export const MainComponent = () => {
                         temparture={machine.values[0].temp}
                         cycles={machine.values[0].cycle}
                         upTime={machine.values[0].uptime}
+                        status={machine.values[0].status}
                     />
                 ))
             ) : (
-                <p>loading</p>
+                <>
+                    <Card
+                        machineID={test.machineID}
+                        temparture={test.temparture}
+                        cycles={test.cycles}
+                        upTime={test.uptime}
+                        status={test.status}
+                    />
+                </>
             )}
         </div>
     );

@@ -4,10 +4,8 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                // Color header component
                 //default colors
                 grey: '#979696dc',
-                green: '#22c55e',
                 //Color header component
                 ColorStatusConnectionOnline: '#22c55e',
                 ColorStatusConnectionOffline: 'red',
