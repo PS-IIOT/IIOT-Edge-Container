@@ -22,15 +22,15 @@ class Database(object):
 
     @staticmethod
     def find(collection,data):
-        Database.DATABASE[collection].find_one(data)
+        Database.DATABASE[collection].find(data)
 
     @staticmethod
     def update(collection,data):
         Database.DATABASE[collection].update({}, data)
     
     @staticmethod
-    def replace(collection,data):
-        Database.DATABASE[collection].replace_one(filter={}, replacement=data, upsert=True)
+    def replace(collection,data,dfilter={}):
+        Database.DATABASE[collection].replace_one(filter=dfilter, replacement=data, upsert=True)
 
     @staticmethod
     def listDatabases():
@@ -51,3 +51,11 @@ class Database(object):
     @staticmethod
     def insertOne(collection,data):
         Database.DATABASE[collection].insert_one(data)
+
+
+    @staticmethod
+    def countDocument(collection,data):
+        return Database.DATABASE[collection].count_documents(data)
+
+
+    

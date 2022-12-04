@@ -1,9 +1,10 @@
 import socket
 import threading
 from datetime import *
-import sys
 from .database import Database
 import json
+import jsonschema
+from jsonschema import validate
 
 class Tcpsocket:
     def __init__(self,ip='127.0.0.1',port=7002) -> None:
@@ -16,6 +17,15 @@ class Tcpsocket:
     def handle_client(self, conn:socket.socket, data_handler): 
         while self.connect:
             data = conn.recv(1024)
+            try:    
+                tmp = json.loads(data)
+                pattern = {"type":"object","properties":{"version":{"type":"string"},
+                "data":{"type":"array","prefixItems":[{"type":"string"},{"type":"boolean"},{"type":"boolean"},{"type":"boolean"},
+                {"type":"boolean"},{"type":"boolean"},{"type":"number"},{"type":"number"},{"type":"number"}]}}}
+                validate(instance=tmp, schema=pattern)
+            except jsonschema.ValidationError as e:
+                print(f"No valid Json: {e.message}")
+                Database.replace("Errorlog",{"id":202,"errormsg": e.message})
             if not data:
                 self.connect = False  
             data_handler.store_que(data,self.timestamp())
@@ -26,17 +36,18 @@ class Tcpsocket:
         self.server.listen()
         while True:
             conn, addr = self.server.accept() 
-            if "Ip_whitelist" in Database.listCollectionNames():
+            if Database.countDocument("Ip_whitelist",{"_id":1}) > 0:
                 cursor = Database.find_ip("Ip_whitelist")
                 ip_adresses = cursor["Ip_Adresses"]
             else:
-                Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1","187.69.69.1"]})
+                Database.insertOne("Ip_whitelist",{"_id":1,"Ip_Adresses": ["127.0.0.1","187.69.69.1"]})
                 cursor = Database.find_ip("Ip_whitelist")
                 ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
                 thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
                 thread.start()
+                
             else:
                 print("Wrong Ip")
                 conn.shutdown(socket.SHUT_RDWR)

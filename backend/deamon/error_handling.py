@@ -1,0 +1,2 @@
+class Errorhandling(Exception):
+    None
