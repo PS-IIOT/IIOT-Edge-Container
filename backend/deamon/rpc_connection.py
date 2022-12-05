@@ -12,6 +12,7 @@ class Rpcconnection:
         self.password = os.getenv('RPC_PASSWORD')
         self.sid = None
         self.count = 1
+        self.error = {}
 
     def increment(self):
         self.count +=1
@@ -25,13 +26,21 @@ class Rpcconnection:
         login_json["params"][2] = "create"
         login_json["params"][3]["user"] = self.user
         login_json["params"][3]["password"] = self.password
-        login = requests.post(self.HOST, json=login_json)
+        try:
+            login = requests.post(self.HOST, json=login_json)
+        except requests.ConnectionError as e:
+            print(f"connection error: {e}")
+    
         json_response = login.json()
         self.sid = json_response["result"][1]["sid"]
 
+
     def blxpush_push(self, push_data):
         if not self.sid:
-            self.session_create()
+            try:
+                self.session_create()
+            except:
+                None
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, push_data]}
         push_json["id"] = self.count
         self.increment()

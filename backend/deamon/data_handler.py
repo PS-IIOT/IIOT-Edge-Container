@@ -24,7 +24,6 @@ class Datahandler:
         try:
             self.rpc.send_data(conv_json_object_rpc)
         except Exception as e:
-            x = 1
             print(f"Failed to send Data {e}")
         serialno = conv_json_object_db["serialnumber"]
         Database.replace(serialno, conv_json_object_db)
