@@ -36,8 +36,8 @@ def getAllError():
 
 @app.route('/api/v1/erros/<string:serialnumber>', methods=['GET'])
 def getOneError(serialnumber):
-    cursor = db["Errorlog"].find({"machine": serialnumber})
-    item = json_util.dumps(cursor.toArray())
+    cursor = list(db["Errorlog"].find({'machine': serialnumber}))
+    item = json_util.dumps(cursor)
     return json.loads(item)
 
 def create_app():
