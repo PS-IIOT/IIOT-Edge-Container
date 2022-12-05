@@ -11,7 +11,7 @@ mongo = PyMongo(app)
 db = mongo.db
     
 @app.route('/api/v1/machines', methods=['GET'])
-def getAll():
+def getAllMachine():
     collist = db.list_collection_names()
     collist.remove("Ip_whitelist")
     collist.remove("Errorlog")
@@ -23,9 +23,21 @@ def getAll():
     return datalist
 
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
-def getMachine(serialnumber):
+def getOneMachine(serialnumber):
     cursor = db[serialnumber].find({'serialnumber': serialnumber})
     item = json_util.dumps(cursor.next())
+    return json.loads(item)
+
+@app.route('/api/v1/errors', methods=['GET'])
+def getAllError():
+    cursor = db["Errorlog"].find({})
+    item = json_util.dumps(cursor)
+    return json.loads(item)
+
+@app.route('/api/v1/erros/<string:serialnumber>', methods=['GET'])
+def getOneError(serialnumber):
+    cursor = db["Errorlog"].find({"machine": serialnumber})
+    item = json_util.dumps(cursor.toArray())
     return json.loads(item)
 
 def create_app():

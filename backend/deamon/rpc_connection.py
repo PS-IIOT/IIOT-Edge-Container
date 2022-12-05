@@ -26,21 +26,14 @@ class Rpcconnection:
         login_json["params"][2] = "create"
         login_json["params"][3]["user"] = self.user
         login_json["params"][3]["password"] = self.password
-        try:
-            login = requests.post(self.HOST, json=login_json)
-        except requests.ConnectionError as e:
-            print(f"connection error: {e}")
-    
+        login = requests.post(self.HOST, json=login_json)
         json_response = login.json()
         self.sid = json_response["result"][1]["sid"]
 
 
     def blxpush_push(self, push_data):
         if not self.sid:
-            try:
-                self.session_create()
-            except:
-                None
+            self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, push_data]}
         push_json["id"] = self.count
         self.increment()

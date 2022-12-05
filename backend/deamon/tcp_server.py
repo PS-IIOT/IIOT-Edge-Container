@@ -18,8 +18,6 @@ class Tcpsocket:
     def handle_client(self, conn:socket.socket, data_handler): 
         while self.connect:
             data = conn.recv(1024)
-            if not data:
-                self.connect = False
             try:    
                 tmp = json.loads(data)
                 pattern = {"type":"object","properties":{"version":{"type":"string"},
@@ -34,7 +32,9 @@ class Tcpsocket:
                 print(f"No valid Json: {e.message}")
                 Database.replace("Errorlog",{"id":202,"errormsg": e.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
                 self.error.update({tmp['data'][0]:True})
-                print(str(self.error))            
+                print(str(self.error))
+            if not data:
+                self.connect = False            
             data_handler.store_que(data,self.timestamp())
         conn.close()
     
