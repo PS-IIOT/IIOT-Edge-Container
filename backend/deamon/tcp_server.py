@@ -13,6 +13,7 @@ class Tcpsocket:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.HOST, self.PORT))
         self.connect = True
+        self.error = {}
     
     def handle_client(self, conn:socket.socket, data_handler): 
         while self.connect:
@@ -23,13 +24,17 @@ class Tcpsocket:
                 "data":{"type":"array","prefixItems":[{"type":"string"},{"type":"boolean"},{"type":"boolean"},{"type":"boolean"},
                 {"type":"boolean"},{"type":"boolean"},{"type":"number"},{"type":"number"},{"type":"number"}]}}}
                 validate(instance=tmp, schema=pattern)
+                if tmp['data'][0] in self.error:
+                    self.error = {tmp['data'][0]:False}
+                    Database.deleteMany("Errorlog",{"id": 202,"machine":tmp['data'][0]})  
             except jsonschema.ValidationError as e:
                 print(f"No valid Json: {e.message}")
-                Database.replace("Errorlog",{"id":202,"errormsg": e.message})
+                Database.replace("Errorlog",{"id":202,"errormsg": e.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0]})
+                self.error[tmp['data'][0]] = False
+            
             if not data:
                 self.connect = False  
             data_handler.store_que(data,self.timestamp())
-            conn.send(data)
         conn.close()
     
     def listen(self, data_handler)->None:                         

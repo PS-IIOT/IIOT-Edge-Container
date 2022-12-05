@@ -57,5 +57,13 @@ class Database(object):
     def countDocument(collection,data):
         return Database.DATABASE[collection].count_documents(data)
 
+    @staticmethod
+    def deleteOne(collection,data):
+        return Database.DATABASE[collection].delete_one(data)
+
+    @staticmethod
+    def deleteMany(collection,data):
+        return Database.DATABASE[collection].delete_many(data)
+
 
     

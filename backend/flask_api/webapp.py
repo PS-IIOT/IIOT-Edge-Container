@@ -2,9 +2,12 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 import json
+from deamon.database import Database
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
+
+#"mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
 mongo = PyMongo(app)
 db = mongo.db
     
