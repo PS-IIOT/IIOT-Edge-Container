@@ -15,6 +15,7 @@ db = mongo.db
 @app.route('/api/v1/machines', methods=['GET'])
 def getAll():
     collist = db.list_collection_names()
+    collist.remove("Ip_whitelist")
     datalist = list()
     for col in collist:
         rec = db[col].find()
@@ -23,6 +24,7 @@ def getAll():
         datalist.append(json.loads(json_data))
     return datalist
 
+
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
 def getMachine(serialnumber):
     cursor = db[serialnumber].find({'measurement': serialnumber})
@@ -30,6 +32,7 @@ def getMachine(serialnumber):
     json_data = dumps(list_cur[0])
     print(str(json_data))
     return json_data
+
 
 def create_app():
     with app.app_context():

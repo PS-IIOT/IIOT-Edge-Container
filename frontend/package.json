@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "build": "tsc && vite build",
     "validate": "npm run lint && npm run build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker-dev": "vite --host"
   },
   "dependencies": {
     "react": "^18.2.0",
