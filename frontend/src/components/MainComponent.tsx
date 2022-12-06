@@ -130,7 +130,6 @@ const test = {
     temparture: 0,
     cycles: 0,
     uptime: 0,
-    status: true,
     warning: true,
     alert: false,
 };
@@ -158,9 +157,8 @@ export const MainComponent = () => {
                         temparture={machine.values[0].temp}
                         cycles={machine.values[0].cycle}
                         upTime={machine.values[0].uptime}
-                        status={machine.values[0].status}
                         warning={machine.values[0].warning}
-                        alert={machine.values[0].alert}
+                        error={machine.values[0].alert}
                     />
                 ))
             ) : (
@@ -170,9 +168,8 @@ export const MainComponent = () => {
                         temparture={test.temparture}
                         cycles={test.cycles}
                         upTime={test.uptime}
-                        status={test.status}
                         warning={test.warning}
-                        alert={test.alert}
+                        error={test.alert}
                     />
                 </>
             )}

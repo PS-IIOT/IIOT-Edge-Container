@@ -1,7 +1,7 @@
-interface statusHeader {
+interface statusHeaderProps {
     statusH: boolean;
 }
-export const HeaderComponent = ({ statusH }: statusHeader) => {
+export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
     return (
         <div className=" flex justify-between items-center w-screen h-20 bg-ColorHeaderBackground">
             <div className="w-auto h-auto m-5">
