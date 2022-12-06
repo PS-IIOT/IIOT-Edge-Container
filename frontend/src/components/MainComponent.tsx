@@ -84,7 +84,7 @@
 //     );
 // };
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from './Card';
 
 // {
@@ -120,53 +120,34 @@ type Machine = {
             ts: string;
             uptime: number;
             status: boolean;
+            warning: boolean;
+            alert: boolean;
         }
     ];
 };
 const test = {
-    machineID: '',
+    machineID: 'Test',
     temparture: 0,
     cycles: 0,
     uptime: 0,
-    status: false,
+    status: true,
+    warning: true,
+    alert: false,
 };
-
-// Liste aller Konvertierten Datendeque([{'measurement': 'Micha', 'tags': {'serialnumber': 'Micha'}, 'values': [{'ts': '2022-12-01T12:15:08.486Z', 'uptime': 74, 'temp': 20.555555555555557, 'cycle': 1070}]}])
-
 export const MainComponent = () => {
     const [machine, setMachine] = useState<Machine[]>();
 
-    function useInterval(callback, delay: number) {
-        const savedCallback = useRef();
-        // Remember the latest callback.
-        useEffect(() => {
-            savedCallback.current = callback;
-        }, [callback]);
-        // Set up the interval.
-        useEffect(() => {
-            function tick() {
-                savedCallback.current();
-            }
-            const id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }, [delay]);
-    }
-
-    function pollingLoop() {
-        const [count, setCount] = useState(0);
-        useInterval(() => {
+    useEffect(() => {
+        const interval = setInterval(() => {
             void fetch(`http://localhost:5000/api/v1/machines`)
                 .then((response) => response.json() as Promise<Machine[]>)
                 .then((json) => {
                     console.log(json);
-                    // const newMachineData = parseMachines(json);
                     setMachine(json);
                 });
-            setCount(count + 1);
-        }, 10000); // Your custom logic here    setCount(count + 1);  }, 1000);
-    }
-
-    pollingLoop();
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className="h-screen overflow-y-scroll flex flex-wrap justify-evenly">
             {machine ? (
@@ -178,6 +159,8 @@ export const MainComponent = () => {
                         cycles={machine.values[0].cycle}
                         upTime={machine.values[0].uptime}
                         status={machine.values[0].status}
+                        warning={machine.values[0].warning}
+                        alert={machine.values[0].alert}
                     />
                 ))
             ) : (
@@ -188,9 +171,43 @@ export const MainComponent = () => {
                         cycles={test.cycles}
                         upTime={test.uptime}
                         status={test.status}
+                        warning={test.warning}
+                        alert={test.alert}
                     />
                 </>
             )}
         </div>
     );
 };
+
+// function useInterval(callback: Machine[], delay: number) {
+//     const savedCallback = useRef<Machine[]>();
+//     // Remember the latest callback.
+//     useEffect(() => {
+//         savedCallback.current = callback;
+//     }, [callback]);
+//     // Set up the interval.
+//     useEffect(() => {
+//         function tick() {
+//             if (savedCallback.current) {
+//                 savedCallback.current();
+//             }
+//         }
+//         const id = setInterval(tick, delay);
+//         return () => clearInterval(id);
+//     }, [delay]);
+// }
+
+// function pollingLoop() {
+//     const [count, setCount] = useState(0);
+//     useInterval(() => {
+//         void fetch(`http://localhost:5000/api/v1/machines`)
+//             .then((response) => response.json() as Promise<Machine[]>)
+//             .then((json) => {
+//                 console.log(json);
+//                 // const newMachineData = parseMachines(json);
+//                 setMachine(json);
+//             });
+//         setCount(count + 1);
+//     }, 10000); // Your custom logic here    setCount(count + 1);  }, 1000);
+// }
