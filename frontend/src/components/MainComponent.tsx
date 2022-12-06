@@ -85,8 +85,8 @@
 // };
 
 import { useEffect, useState } from 'react';
+import { useInterval } from '../hooks/useInterval';
 import { Card } from './Card';
-
 // {
 //     "_id":  {
 //       "$oid": "638502460d95454ad123f976"
@@ -109,21 +109,13 @@ type Machine = {
     _id: {
         $oid: string;
     };
-    measurement: string;
-    tags: {
-        serialnumber: string;
-    };
-    values: [
-        {
-            cycle: number;
-            temp: number;
-            ts: string;
-            uptime: number;
-            status: boolean;
-            warning: boolean;
-            alert: boolean;
-        }
-    ];
+    cycle: number;
+    error: boolean;
+    serialnumber: string;
+    temp: number;
+    ts: string;
+    uptime: number;
+    warning: boolean;
 };
 const test = {
     machineID: 'Test',
@@ -134,31 +126,40 @@ const test = {
     alert: false,
 };
 export const MainComponent = () => {
-    const [machine, setMachine] = useState<Machine[]>();
+    const [machines, setMachines] = useState<Machine[]>();
+
+    // useInterval(() => {
+    //     void fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines`)
+    //         .then((response) => response.json() as Promise<Machine[]>)
+    //         .then((json) => {
+    //             console.log(json);
+    //             setMachines(json);
+    //         });
+    // }, 1000);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            void fetch(`http://localhost:5000/api/v1/machines`)
+            void fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines`)
                 .then((response) => response.json() as Promise<Machine[]>)
                 .then((json) => {
                     console.log(json);
-                    setMachine(json);
+                    setMachines(json);
                 });
         }, 10000);
         return () => clearInterval(interval);
     }, []);
     return (
         <div className="h-screen overflow-y-scroll flex flex-wrap justify-evenly">
-            {machine ? (
-                machine.map((machine) => (
+            {machines ? (
+                machines.map((machine) => (
                     <Card
                         key={machine._id.$oid}
-                        machineID={machine.measurement}
-                        temparture={machine.values[0].temp}
-                        cycles={machine.values[0].cycle}
-                        upTime={machine.values[0].uptime}
-                        warning={machine.values[0].warning}
-                        error={machine.values[0].alert}
+                        machineID={machine.serialnumber}
+                        temparture={machine.temp}
+                        cycles={machine.cycle}
+                        upTime={machine.uptime}
+                        warning={machine.warning}
+                        error={machine.error}
                     />
                 ))
             ) : (
