@@ -2,6 +2,8 @@ import socket
 import threading
 from datetime import *
 import sys
+from .database import Database
+import json
 
 class Tcpsocket:
     def __init__(self,ip='127.0.0.1',port=7002) -> None:
@@ -18,22 +20,27 @@ class Tcpsocket:
                 self.connect = False  
             data_handler.store_que(data,self.timestamp())
             conn.send(data)
-            data_handler.printConv_list()
         conn.close()
-        #print(threading.active_count())
     
     def listen(self, data_handler)->None:                         
-        try:
-            self.server.listen()
-            while True:
-                conn, addr = self.server.accept()
+        self.server.listen()
+        while True:
+            conn, addr = self.server.accept() 
+            if "Ip_whitelist" in Database.listCollectionNames():
+                cursor = Database.find_ip("Ip_whitelist")
+                ip_adresses = cursor["Ip_Adresses"]
+            else:
+                Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1","187.69.69.1"]})
+                cursor = Database.find_ip("Ip_whitelist")
+                ip_adresses = cursor["Ip_Adresses"]
+            if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
                 thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
                 thread.start()
-        except KeyboardInterrupt:
-            print ('Interrupted')
-            sys.exit(0)
-            
+            else:
+                print("Wrong Ip")
+                conn.shutdown(socket.SHUT_RDWR)
+                conn.close()
     def timestamp(self):
         dt = datetime.now()
         ts = str(dt.isoformat('T'))
