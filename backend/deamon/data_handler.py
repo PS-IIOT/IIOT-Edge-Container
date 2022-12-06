@@ -26,4 +26,4 @@ class Datahandler:
         except Exception as e:
             print(f"Failed to send Data {e}")
         serialno = conv_json_object_db["serialnumber"]
-        Database.replace(serialno, conv_json_object_db)
+        Database.replace("Machinedata", conv_json_object_db,{"serialnumber":serialno})

@@ -12,19 +12,13 @@ db = mongo.db
     
 @app.route('/api/v1/machines', methods=['GET'])
 def getAllMachine():
-    collist = db.list_collection_names()
-    collist.remove("Ip_whitelist")
-    collist.remove("Errorlog")
-    datalist = []
-    for col in collist:
-        cursor = db[col].find()
-        json_data = json_util.dumps(cursor.next())
-        datalist.append(json.loads(json_data))
-    return datalist
+    cursor = db["Machinedata"].find({})
+    item = json_util.dumps(cursor)
+    return json.loads(item)
 
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
 def getOneMachine(serialnumber):
-    cursor = db[serialnumber].find({'serialnumber': serialnumber})
+    cursor = db["Machinedata"].find({'serialnumber': serialnumber})
     item = json_util.dumps(cursor.next())
     return json.loads(item)
 
@@ -34,9 +28,9 @@ def getAllError():
     item = json_util.dumps(cursor)
     return json.loads(item)
 
-@app.route('/api/v1/erros/<string:serialnumber>', methods=['GET'])
+@app.route('/api/v1/errors/<string:serialnumber>', methods=['GET'])
 def getOneError(serialnumber):
-    cursor = list(db["Errorlog"].find({'machine': serialnumber}))
+    cursor = db["Errorlog"].find({'machine': serialnumber})
     item = json_util.dumps(cursor)
     return json.loads(item)
 
