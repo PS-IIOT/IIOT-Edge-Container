@@ -128,26 +128,25 @@ const test = {
 export const MainComponent = () => {
     const [machines, setMachines] = useState<Machine[]>();
 
-    // useInterval(() => {
-    //     void fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines`)
-    //         .then((response) => response.json() as Promise<Machine[]>)
-    //         .then((json) => {
-    //             console.log(json);
-    //             setMachines(json);
-    //         });
-    // }, 1000);
+    useInterval(async () => {
+        const response = await fetch(
+            `${import.meta.env.VITE_BACKEND_API_URL}/machines`
+        );
+        const json_data = (await response.json()) as Machine[];
+        setMachines(json_data);
+    }, 1000);
 
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_API_URL}/machines`
-            );
-            const json_data = (await response.json()) as Machine[];
-            setMachines(json_data);
-        }, 10000);
+    // useEffect(() => {
+    //     const interval = setInterval(async () => {
+    //         const response = await fetch(
+    //             `${import.meta.env.VITE_BACKEND_API_URL}/machines`
+    //         );
+    //         const json_data = (await response.json()) as Machine[];
+    //         setMachines(json_data);
+    //     }, 10000);
 
-        return () => clearInterval(interval);
-    }, []);
+    //     return () => clearInterval(interval);
+    // }, []);
     return (
         <div className="h-screen overflow-y-scroll flex flex-wrap justify-evenly">
             {machines ? (
