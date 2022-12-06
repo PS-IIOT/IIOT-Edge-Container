@@ -138,14 +138,14 @@ export const MainComponent = () => {
     // }, 1000);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            void fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines`)
-                .then((response) => response.json() as Promise<Machine[]>)
-                .then((json) => {
-                    console.log(json);
-                    setMachines(json);
-                });
+        const interval = setInterval(async () => {
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_API_URL}/machines`
+            );
+            const json_data = (await response.json()) as Machine[];
+            setMachines(json_data);
         }, 10000);
+
         return () => clearInterval(interval);
     }, []);
     return (
