@@ -65,5 +65,9 @@ class Database(object):
     def deleteMany(collection,data):
         return Database.DATABASE[collection].delete_many(data)
 
+    @staticmethod
+    def updateOne(collection,data,dfilter={}):
+        Database.DATABASE[collection].update_one(filter=dfilter,update=data)
+
 
     

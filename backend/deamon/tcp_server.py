@@ -12,11 +12,10 @@ class Tcpsocket:
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.HOST, self.PORT))
-        self.connect = True
         self.error = {}
     
     def handle_client(self, conn:socket.socket, data_handler): 
-        while self.connect:
+        while True:
             data = conn.recv(1024)
             try:    
                 tmp = json.loads(data)
@@ -28,15 +27,18 @@ class Tcpsocket:
                     self.error.update({tmp['data'][0]:False})
                     Database.deleteOne("Errorlog",{"id": 202,"machine":tmp['data'][0]})
                     print(str(self.error))
-            except jsonschema.ValidationError as e:
-                print(f"No valid Json: {e.message}")
-                Database.replace("Errorlog",{"id":202,"errormsg": e.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
+            except jsonschema.ValidationError as error:
+                print(f"No valid Json: {error.message}")
+                Database.replace("Errorlog",{"id":202,"errormsg": error.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
                 self.error.update({tmp['data'][0]:True})
                 print(str(self.error))
-            if not data:
-                self.connect = False            
+            except json.decoder.JSONDecodeError as er:
+                print(f"Empty response {er}")
             data_handler.store_que(data,self.timestamp())
-        conn.close()
+            if not data:
+                Database.updateOne("Machinedata",{"$set":{"offline":True}},{"serialnumber":tmp['data'][0]})
+                conn.close()
+                break
     
     def listen(self, data_handler)->None:                         
         self.server.listen()
@@ -52,12 +54,12 @@ class Tcpsocket:
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
                 thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
-                thread.start()
-                
+                thread.start()               
             else:
                 print("Wrong Ip")
                 conn.shutdown(socket.SHUT_RDWR)
                 conn.close()
+    
     def timestamp(self):
         dt = datetime.now()
         ts = str(dt.isoformat('T'))
