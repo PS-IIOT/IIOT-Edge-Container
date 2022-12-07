@@ -1,7 +1,8 @@
 from collections import deque
 import json
 import os
-
+import logging
+logging.basicConfig(filename='backend.log',level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 class Dataconverter:
     def conversion_db(self,timestamp,data):
         try:
@@ -15,7 +16,7 @@ class Dataconverter:
             data['cycle'] = json_object['data'][8]
             data['ts'] = str(timestamp)
         except json.decoder.JSONDecodeError as er:
-                print(f"Empty response {er}")
+                logging.debug(f"Empty Object cannot be parsed to JSON {er}")
         return data
     
     
@@ -32,5 +33,5 @@ class Dataconverter:
             data['values'][0]['cycle'] = json_object['data'][8]
             data['values'][0]['ts'] = str(timestamp)
         except json.decoder.JSONDecodeError as er:
-                print(f"Empty response {er}")
+                logging.debug(f"Empty Object cannot be parsed to JSON {er}")
         return data

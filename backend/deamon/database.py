@@ -17,10 +17,6 @@ class Database(object):
         Database.DATABASE = Database.CLIENT["machineData"]
 
     @staticmethod
-    def insert(collection, data):
-        Database.DATABASE[collection].insert_one(data)
-
-    @staticmethod
     def find(collection,data):
         Database.DATABASE[collection].find(data)
 
@@ -31,10 +27,6 @@ class Database(object):
     @staticmethod
     def replace(collection,data,dfilter={}):
         Database.DATABASE[collection].replace_one(filter=dfilter, replacement=data, upsert=True)
-
-    @staticmethod
-    def listDatabases():
-        print(Database.CLIENT.list_databases())
     
     @staticmethod
     def listCollectionNames():
@@ -43,15 +35,10 @@ class Database(object):
     @staticmethod
     def find_ip(collection):
         return Database.DATABASE[collection].find_one()
-
-    @staticmethod
-    def create_Collection(collection):
-        Database.DATABASE.create_collection(collection)
     
     @staticmethod
     def insertOne(collection,data):
         Database.DATABASE[collection].insert_one(data)
-
 
     @staticmethod
     def countDocument(collection,data):

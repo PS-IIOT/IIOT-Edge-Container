@@ -5,6 +5,10 @@ from .database import Database
 import json
 import jsonschema
 from jsonschema import validate
+import logging
+
+logging.basicConfig(filename='backend.log',level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+
 
 class Tcpsocket:
     def __init__(self,ip='127.0.0.1',port=7002) -> None:
@@ -14,7 +18,7 @@ class Tcpsocket:
         self.server.bind((self.HOST, self.PORT))
         self.error = {}
     
-    def handle_client(self, conn:socket.socket, data_handler): 
+    def handle_client(self, conn:socket.socket, data_handler, addr): 
         while True:
             data = conn.recv(1024)
             try:    
@@ -26,17 +30,16 @@ class Tcpsocket:
                 if tmp['data'][0] in self.error:
                     self.error.update({tmp['data'][0]:False})
                     Database.deleteOne("Errorlog",{"id": 202,"machine":tmp['data'][0]})
-                    print(str(self.error))
             except jsonschema.ValidationError as error:
-                print(f"No valid Json: {error.message}")
+                logging.debug(f"No valid Json: {error.message}")
                 Database.replace("Errorlog",{"id":202,"errormsg": error.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
                 self.error.update({tmp['data'][0]:True})
-                print(str(self.error))
             except json.decoder.JSONDecodeError as er:
-                print(f"Empty response {er}")
+                logging.debug(f"Empty Object cannot be cast to JSON {er}")
             data_handler.store_que(data,self.timestamp())
             if not data:
                 Database.updateOne("Machinedata",{"$set":{"offline":True}},{"serialnumber":tmp['data'][0]})
+                print(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
                 conn.close()
                 break
     
@@ -53,7 +56,7 @@ class Tcpsocket:
                 ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
-                thread = threading.Thread(target=self.handle_client,args=(conn, data_handler))
+                thread = threading.Thread(target=self.handle_client,args=(conn, data_handler, addr))
                 thread.start()               
             else:
                 print("Wrong Ip")
