@@ -4,7 +4,7 @@
 
 #project specific changes
 machine-sim/machine-state.json
-
+backend/.env
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -129,7 +129,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
