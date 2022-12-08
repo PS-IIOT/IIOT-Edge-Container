@@ -56,5 +56,9 @@ class Database(object):
     def updateOne(collection,data,dfilter={}):
         Database.DATABASE[collection].update_one(filter=dfilter,update=data)
 
+    @staticmethod
+    def findOne(collection,data):
+        return Database.DATABASE[collection].find_one(data)
+
 
     

@@ -2,7 +2,7 @@ from collections import deque
 import json
 import os
 import logging
-logging.basicConfig(filename='backend.log',level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 class Dataconverter:
     def conversion_db(self,timestamp,data):
         try:

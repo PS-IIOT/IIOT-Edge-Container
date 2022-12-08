@@ -2,7 +2,7 @@ from collections import deque
 from deamon.data_converter import Dataconverter
 from .database import Database
 import logging
-logging.basicConfig(filename='backend.log',level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 class Datahandler:
     def __init__(self, rpc) -> None:

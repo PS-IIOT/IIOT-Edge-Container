@@ -7,7 +7,7 @@ import jsonschema
 from jsonschema import validate
 import logging
 
-logging.basicConfig(filename='backend.log',level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Tcpsocket:
@@ -16,7 +16,6 @@ class Tcpsocket:
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.HOST, self.PORT))
-        self.error = {}
     
     def handle_client(self, conn:socket.socket, data_handler, addr): 
         while True:
@@ -27,13 +26,11 @@ class Tcpsocket:
                 "data":{"type":"array","prefixItems":[{"type":"string"},{"type":"boolean"},{"type":"boolean"},{"type":"boolean"},
                 {"type":"boolean"},{"type":"boolean"},{"type":"number"},{"type":"number"},{"type":"number"}]}}}
                 validate(instance=tmp, schema=pattern)
-                if tmp['data'][0] in self.error:
-                    self.error.update({tmp['data'][0]:False})
+                if Database.countDocument("Errorlog",{"id":202,"machine":tmp['data'][0]})>0:
                     Database.deleteOne("Errorlog",{"id": 202,"machine":tmp['data'][0]})
             except jsonschema.ValidationError as error:
                 logging.debug(f"No valid Json: {error.message}")
                 Database.replace("Errorlog",{"id":202,"errormsg": error.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
-                self.error.update({tmp['data'][0]:True})
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Empty Object cannot be cast to JSON {er}")
             data_handler.store_que(data,self.timestamp())
