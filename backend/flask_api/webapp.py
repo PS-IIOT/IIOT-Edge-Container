@@ -4,6 +4,8 @@ from bson.json_util import dumps, loads
 import json
 from deamon.database import Database
 from bson import json_util
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 CORS(app)
@@ -26,17 +28,20 @@ def getOneMachine(serialnumber):
     item = json_util.dumps(cursor.next())
     return json.loads(item)
 
+
 @app.route('/api/v1/errors', methods=['GET'])
 def getAllError():
     cursor = db["Errorlog"].find({})
     item = json_util.dumps(cursor)
     return json.loads(item)
 
+
 @app.route('/api/v1/errors/<string:serialnumber>', methods=['GET'])
 def getOneError(serialnumber):
     cursor = db["Errorlog"].find({'machine': serialnumber})
     item = json_util.dumps(cursor)
     return json.loads(item)
+
 
 def create_app():
     with app.app_context():
