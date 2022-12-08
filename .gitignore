@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,python
 
+
+#project specific changes
+machine-sim/machine-state.json
+backend/.env
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -124,7 +129,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/

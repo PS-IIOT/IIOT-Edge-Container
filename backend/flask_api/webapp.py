@@ -6,15 +6,19 @@ from deamon.database import Database
 from bson import json_util
 
 app = Flask(__name__)
+CORS(app)
+
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
 mongo = PyMongo(app)
 db = mongo.db
-    
+
+
 @app.route('/api/v1/machines', methods=['GET'])
 def getAllMachine():
     cursor = db["Machinedata"].find({})
     item = json_util.dumps(cursor)
     return json.loads(item)
+
 
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
 def getOneMachine(serialnumber):
