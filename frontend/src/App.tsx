@@ -4,7 +4,7 @@ import { FooterComponent } from './components/FooterComponent';
 
 export const App = () => {
     return (
-        <div className="flex flex-col h-screen justify-between bg-ColorAppBackground">
+        <div className="flex flex-col h-screen bg-ColorAppBackground">
             <HeaderComponent statusH={true} />
             <MainComponent />
             <FooterComponent />

@@ -1,38 +1,82 @@
-import { StatusMachine } from './StatusMachine';
+// import { StatusMachine } from './StatusMachine';
+import { Machine } from '../models/machine.model';
 export interface CardProps {
-    machineID: string;
-    temparture: number;
-    cycles: number;
-    upTime: number;
-    warning: boolean;
-    error: boolean;
+    machineData: Machine;
+    className?: string;
 }
 
-export const Card = ({
-    machineID,
-    temparture,
-    cycles,
-    upTime,
-    warning,
-    error,
-}: CardProps) => {
+export const Card = ({ machineData }: CardProps) => {
     return (
-        <div className="flex-col justify-between  w-48 h-48 bg-ColorCardBackground m-5 rounded-lg shadow-md shadow-black">
-            <div className="flex justify-around items-center bg-ColorCardTopBottom w-full h-8 rounded-t-md ">
-                <h3 className=" flex italic text-c text-black">{machineID}</h3>
-                <StatusMachine warning={warning} error={error}></StatusMachine>
-            </div>
-            <div className="flex flex-col justify-center items-center">
-                <div className="flex justify-center items-center w-full text-white text-4xl ml-2 mt-4">
-                    {temparture.toPrecision(4)}°C
-                </div>
+        <div className="flex-col justify-between h-min bg-ColorCardBackground rounded-lg shadow-md shadow-black">
+            <CardHeader machineData={machineData} />
+
+            <div className="flex flex-col justify-center items-center p-2">
+                <CardTemperature machineData={machineData} />
                 <div className="flex justify-center text-white text-2xl mt-4">
-                    {cycles} St
+                    cycle:&nbsp;
+                    <span className="italic">{machineData.cycle}</span>
                 </div>
                 <div className="flex justify-center w-full rounded-b-lg text-white mt-4">
-                    {upTime}s
+                    uptime:{' '}
+                    {new Date(machineData.uptime * 1000)
+                        .toISOString()
+                        .slice(11, 19)}
+                </div>
+                <div className="flex justify-center w-full rounded-b-lg text-white mt-4">
+                    last timestamp:{' '}
+                    {new Date(machineData.ts).toLocaleString('de-DE')}
                 </div>
             </div>
+        </div>
+    );
+};
+
+const CardHeader = ({ machineData }: CardProps) => {
+    return (
+        <div className="bg-ColorCardTopBottom w-full h-12 rounded-t-md">
+            <div id="wrapper" className="flex items-center h-full rounded-t-md">
+                <div id="left" className="flex-1">
+                    <h3 className="text-black font-bold text-xl p-2">
+                        {machineData.serialnumber}
+                    </h3>
+                </div>
+                <div id="right" className="p-2">
+                    {machineData.offline ? (
+                        <div className="m-3">
+                            <p className="text-gray-500 font-bold italic">
+                                TCP Off
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="m-3">
+                            <p className="text-green-400 font-bold italic">
+                                TCP On
+                            </p>
+                        </div>
+                        // <StatusMachine
+                        //     warning={machineData.warning}
+                        //     error={machineData.error}
+                        // />
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const CardTemperature = ({ machineData }: CardProps) => {
+    return (
+        <div
+            className={`flex justify-center items-center w-full font-bold text-4xl ${
+                machineData.warning
+                    ? machineData.error
+                        ? 'text-red-500'
+                        : 'text-orange-500'
+                    : 'text-green-400'
+            }`}
+        >
+            {machineData.temp.toPrecision(4)}
+            °C
         </div>
     );
 };
