@@ -2,14 +2,15 @@
 import { Machine } from '../models/machine.model';
 export interface CardProps {
     machineData: Machine;
+    className?: string;
 }
 
 export const Card = ({ machineData }: CardProps) => {
     return (
-        <div className="flex-col justify-between h-min bg-ColorCardBackground  m-5 rounded-lg shadow-md shadow-black">
+        <div className="flex-col justify-between h-min bg-ColorCardBackground rounded-lg shadow-md shadow-black">
             <CardHeader machineData={machineData} />
 
-            <div className="flex flex-col justify-center items-center p-5">
+            <div className="flex flex-col justify-center items-center p-2">
                 <CardTemperature machineData={machineData} />
                 <div className="flex justify-center text-white text-2xl mt-4">
                     cycle:&nbsp;
@@ -66,7 +67,7 @@ const CardHeader = ({ machineData }: CardProps) => {
 const CardTemperature = ({ machineData }: CardProps) => {
     return (
         <div
-            className={`flex justify-center items-center w-full font-bold text-4xl ml-2 mt-4 ${
+            className={`flex justify-center items-center w-full font-bold text-4xl ${
                 machineData.warning
                     ? machineData.error
                         ? 'text-red-500'

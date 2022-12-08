@@ -41,7 +41,7 @@ export const MainComponent = () => {
     //     return () => clearInterval(interval);
     // }, []);
     return (
-        <div className="h-screen overflow-y-scroll flex flex-wrap justify-evenly items-center">
+        <div className="flex-1 m-5 p-5 overflow-y-auto flex justify-around flex-wrap content-center gap-5">
             {machines ? (
                 machines.map((machine) => (
                     <Card key={machine._id.$oid} machineData={machine} />
