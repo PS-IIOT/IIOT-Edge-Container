@@ -10,7 +10,7 @@ class Datahandler:
         self.rpc = rpc
         self.data_converter = Dataconverter()
 
-    def store_que(self, data, timestamp):
+    def handle_json(self, data, timestamp):
         self.que.append(data)
         self.conversion(timestamp)
 

@@ -17,10 +17,6 @@ class Database(object):
         Database.DATABASE = Database.CLIENT["machineData"]
 
     @staticmethod
-    def find(collection,data):
-        Database.DATABASE[collection].find(data)
-
-    @staticmethod
     def update(collection,data):
         Database.DATABASE[collection].update({}, data)
     

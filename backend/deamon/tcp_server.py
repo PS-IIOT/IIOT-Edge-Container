@@ -33,7 +33,7 @@ class Tcpsocket:
                 Database.replace("Errorlog",{"id":202,"errormsg": error.message,"machine":tmp['data'][0]},{"machine":tmp['data'][0],"id":202})
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Empty Object cannot be cast to JSON {er}")
-            data_handler.store_que(data,self.timestamp())
+            data_handler.handle_json(data,self.timestamp())
             if not data:
                 Database.updateOne("Machinedata",{"$set":{"offline":True}},{"serialnumber":tmp['data'][0]})
                 print(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
