@@ -46,15 +46,19 @@ def getAllErrors():
     error =json_util.dumps(crusor_errorlog)
     return json.loads(error)
 
-@app.route('/api/v1/machines/<string:ip>', methods=['POST'])
+@app.route('/api/v1/machines', methods=['POST'])
 def insertIp():
-    ip = request.data
-    Database.updateOne("Ip_whitelist",{"$push":{"Ip_Adresses":ip}},{"_id":1})
+    ip = request.json['ip']
+    db["Ip_whitelist"].update_one({"_id":1},{"$push":{"Ip_Adresses":ip}})
+    return "200"
 
-@app.route('/api/v1/machines?<string:ip>', methods=['DELETE'])
-def deletetIp(ip):
-    Database.updateOne("Ip_whitelist",{"$pull":{"Ip_Adresses":{ip}}})
-
+""" @app.route('/api/v1/machines', methods=['DELETE'])
+def deletetIp():
+    ip = request.json["ip"]
+    db["Ip_whitelist"].update_one({"_id":1},{"$pull":{"Ip_Adresses":ip}})
+    return "Deleted" """
+""" Die deleteIp funktion funktioniert nicht so wie wir wollen da pull alle einträge entfernt die mit der 
+Ip  die wir als JSON bekommen übereinstimmen und da unsere Ip_Allowlist nur 127.0.0.1 hält entfernt es alles"""
 
 def create_app():
     with app.app_context():
