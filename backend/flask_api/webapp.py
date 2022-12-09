@@ -5,6 +5,7 @@ import json
 from deamon.database import Database
 from bson import json_util
 from flask_cors import CORS
+from flask import request
 
 
 app = Flask(__name__)
@@ -45,6 +46,14 @@ def getAllErrors():
     error =json_util.dumps(crusor_errorlog)
     return json.loads(error)
 
+@app.route('/api/v1/machines/<string:ip>', methods=['POST'])
+def insertIp():
+    ip = request.data
+    Database.updateOne("Ip_whitelist",{"$push":{"Ip_Adresses":ip}},{"_id":1})
+
+@app.route('/api/v1/machines?<string:ip>', methods=['DELETE'])
+def deletetIp(ip):
+    Database.updateOne("Ip_whitelist",{"$pull":{"Ip_Adresses":{ip}}})
 
 
 def create_app():

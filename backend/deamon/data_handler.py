@@ -21,7 +21,12 @@ class Datahandler:
         conv_json_object_db = self.data_converter.conversion_db(timestamp,temp)
         print(f"Converted JSON Object: {conv_json_object_db}")
         try:
-            self.rpc.send_data(conv_json_object_rpc)
+            wwh_status = self.rpc.wwh_status()
+            if(wwh_status["result"][1]["status"]["link"] == "offline"):
+                Database.replace("Errorlog", {"id":303,"biglinx_connection":wwh_status["result"][1]["status"]["link"]}, {"id":303})
+            else:
+                Database.deleteOne("Errorlog",{"id":303})
+            #self.rpc.send_data(conv_json_object_rpc)
         except Exception as e:
            logging.debug(f"RPC Failed to send Data {e}")
         try:
