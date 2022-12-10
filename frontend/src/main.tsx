@@ -23,6 +23,10 @@ const router = createBrowserRouter([
                 path: '*',
                 element: <User />,
             },
+            {
+                path: '',
+                element: <User />,
+            },
         ],
     },
 ]);
