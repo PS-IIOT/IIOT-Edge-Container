@@ -45,6 +45,7 @@ class Tcpsocket:
         while True:
             conn, addr = self.server.accept() 
             if Database.countDocument("Ip_whitelist",{"_id":1}) > 0:
+                #Database.updateOne("Ip_whitelist",{"$push":{"Ip_Adresses":"127.0.0.1"}},{"_id":1})
                 cursor = Database.find_ip("Ip_whitelist")
                 ip_adresses = cursor["Ip_Adresses"]
             else:
