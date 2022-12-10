@@ -1,7 +1,7 @@
 // import { StatusMachine } from './StatusMachine';
-import { Machine } from '../models/machine.model';
+import { MachineResponse } from '../models/machine-response.model';
 export interface CardProps {
-    machineData: Machine;
+    machineData: MachineResponse;
     className?: string;
 }
 

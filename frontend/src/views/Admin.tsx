@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Allowlist } from '../models/allowlist.model';
+import { Allowlist } from '../models/allowlist-response.model';
 import { getAllowlist } from '../services/machine.service';
 
 export const Admin = () => {
