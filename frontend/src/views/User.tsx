@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useInterval } from '../hooks/useInterval';
-import { Card } from './Card';
+import { Card } from '../components/Card';
 import { getAllMachines } from '../services/machine.service';
 import { Machine } from '../models/machine.model';
 
@@ -18,7 +18,7 @@ const test = {
     warning: false,
     offline: false,
 };
-export const MainComponent = () => {
+export const User = () => {
     const [machines, setMachines] = useState<Machine[]>();
 
     useEffect(() => {
