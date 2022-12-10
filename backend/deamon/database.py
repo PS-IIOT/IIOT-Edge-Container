@@ -17,24 +17,12 @@ class Database(object):
         Database.DATABASE = Database.CLIENT["machineData"]
 
     @staticmethod
-    def insert(collection, data):
-        Database.DATABASE[collection].insert_one(data)
-
-    @staticmethod
-    def find(collection,data):
-        Database.DATABASE[collection].find_one(data)
-
-    @staticmethod
     def update(collection,data):
         Database.DATABASE[collection].update({}, data)
     
     @staticmethod
-    def replace(collection,data):
-        Database.DATABASE[collection].replace_one(filter={}, replacement=data, upsert=True)
-
-    @staticmethod
-    def listDatabases():
-        print(Database.CLIENT.list_databases())
+    def replace(collection,data,dfilter={}):
+        Database.DATABASE[collection].replace_one(filter=dfilter, replacement=data, upsert=True)
     
     @staticmethod
     def listCollectionNames():
@@ -43,11 +31,30 @@ class Database(object):
     @staticmethod
     def find_ip(collection):
         return Database.DATABASE[collection].find_one()
-
-    @staticmethod
-    def create_Collection(collection):
-        Database.DATABASE.create_collection(collection)
     
     @staticmethod
     def insertOne(collection,data):
         Database.DATABASE[collection].insert_one(data)
+
+    @staticmethod
+    def countDocument(collection,data):
+        return Database.DATABASE[collection].count_documents(data)
+
+    @staticmethod
+    def deleteOne(collection,data):
+        return Database.DATABASE[collection].delete_one(data)
+
+    @staticmethod
+    def deleteMany(collection,data):
+        return Database.DATABASE[collection].delete_many(data)
+
+    @staticmethod
+    def updateOne(collection,data,dfilter={}):
+        Database.DATABASE[collection].update_one(filter=dfilter,update=data)
+
+    @staticmethod
+    def findOne(collection,data):
+        return Database.DATABASE[collection].find_one(data)
+
+
+    

@@ -3,7 +3,7 @@ interface statusHeaderProps {
 }
 export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
     return (
-        <div className=" flex justify-between items-center w-screen h-20 bg-ColorHeaderBackground">
+        <div className="flex justify-between items-center w-screen h-20 bg-ColorHeaderBackground">
             <div className="w-auto h-auto m-5">
                 <span className="font-bold text-4xl italic text-white">
                     IRF - 1000

@@ -12,6 +12,7 @@ class Rpcconnection:
         self.password = os.getenv('RPC_PASSWORD')
         self.sid = None
         self.count = 1
+        self.error = {}
 
     def increment(self):
         self.count +=1
@@ -29,6 +30,7 @@ class Rpcconnection:
         json_response = login.json()
         self.sid = json_response["result"][1]["sid"]
 
+
     def blxpush_push(self, push_data):
         if not self.sid:
             self.session_create()
@@ -45,5 +47,20 @@ class Rpcconnection:
             self.sid = None
             self.blxpush_push(push_data)
 
+    def wwh_status(self):
+        if not self.sid:
+            self.session_create()
+        push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {}]}
+        push_json["id"] = self.count
+        self.increment()
+        push_json["params"][0] = self.sid
+        push_json["params"][1] = "wwh"
+        push_json["params"][2] = "status"
+        push = requests.post(self.HOST, json=push_json)
+        push_response = push.json()
+        print("response: ", push_response)
+        return push_response
+
     def send_data(self, converted_data):
         self.blxpush_push(converted_data)
+        self.wwh_status()

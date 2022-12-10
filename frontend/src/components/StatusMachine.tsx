@@ -4,14 +4,17 @@ export interface statusMachineProps {
 }
 export const StatusMachine = ({ warning, error }: statusMachineProps) => {
     return (
-        <div
-            className={
-                warning
-                    ? error
-                        ? 'bg-ColorStatusConnectionOffline ml-24 w-5 h-5 rounded-full'
-                        : 'bg-yellow-400 ml-24 w-5 h-5 rounded-full'
-                    : 'bg-ColorStatusConnectionOnline ml-24 w-5 h-5 rounded-full'
-            }
-        ></div>
+        <div className="flex items-center">
+            <span className="px-2 font-bold text-green-500">Online</span>
+            <div
+                className={`w-8 h-8 rounded-xl ${
+                    warning
+                        ? error
+                            ? 'bg-red-500'
+                            : 'bg-yellow-400'
+                        : 'bg-green-500'
+                }`}
+            ></div>
+        </div>
     );
 };

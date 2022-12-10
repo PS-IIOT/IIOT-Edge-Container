@@ -2,7 +2,7 @@ import deamon.data_handler
 import deamon.tcp_server
 import deamon.rpc_connection
 from .database import Database
-
+import pymongo
 
 def start():
     Database.initialize()
