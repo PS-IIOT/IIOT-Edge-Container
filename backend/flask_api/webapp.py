@@ -28,13 +28,12 @@ def getAllMachine():
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
         print(f"{machine}")
+        machine["errorlog"] = []
         for error in cursor_errorlog:
             print(f"{error}")
-
             if machine["serialnumber"] == error["machine"]:
-                machine["errorlog"] = []
                 machine["errorlog"].append(error)
-                machineList.append(machine)
+        machineList.append(machine)
     item = json_util.dumps(machineList)
     return json.loads(item)
 
@@ -44,7 +43,6 @@ def getOneMachine(serialnumber):
     cursor = list(db["Machinedata"].find({"serialnumber": serialnumber}))
     cursor_errorlog = list(db["Errorlog"].find({"machine": serialnumber}))
     cursor[0]["errorlog"] = cursor_errorlog[0]
-    print(cursor)
     item = json_util.dumps(cursor[0])
     return json.loads(item)
 

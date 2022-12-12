@@ -19,7 +19,7 @@ class Datahandler:
         temp = self.que.popleft()
         conv_json_object_rpc = self.data_converter.conversion_rpc(timestamp, temp)
         conv_json_object_db = self.data_converter.conversion_db(timestamp,temp)
-        print(f"Converted JSON Object: {conv_json_object_db}")
+        #print(f"Converted JSON Object: {conv_json_object_db}")
         try:
             wwh_status = self.rpc.wwh_status()
             if(wwh_status["result"][1]["status"]["link"] == "offline"):
