@@ -1,4 +1,4 @@
-export type Machine = {
+export type MachineResponse = {
     _id: {
         $oid: string;
     };

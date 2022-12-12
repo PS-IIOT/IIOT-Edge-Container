@@ -58,7 +58,7 @@ class Rpcconnection:
         push_json["params"][2] = "status"
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
-        print("response: ", push_response)
+        #print("response: ", push_response)
         return push_response
 
     def send_data(self, converted_data):

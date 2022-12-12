@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useInterval } from '../hooks/useInterval';
 import { Card } from '../components/Card';
 import { getAllMachines } from '../services/machine.service';
-import { Machine } from '../models/machine.model';
+import { MachineResponse } from '../models/machine-response.model';
 
 const test = {
     _id: {
@@ -19,7 +19,7 @@ const test = {
     offline: false,
 };
 export const User = () => {
-    const [machines, setMachines] = useState<Machine[]>();
+    const [machines, setMachines] = useState<MachineResponse[]>();
 
     useEffect(() => {
         void getAllMachines().then((data) => setMachines(data));

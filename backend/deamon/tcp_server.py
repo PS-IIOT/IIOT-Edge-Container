@@ -44,14 +44,8 @@ class Tcpsocket:
         self.server.listen()
         while True:
             conn, addr = self.server.accept() 
-            if Database.countDocument("Ip_whitelist",{"_id":1}) > 0:
-                #Database.updateOne("Ip_whitelist",{"$push":{"Ip_Adresses":"127.0.0.1"}},{"_id":1})
-                cursor = Database.find_ip("Ip_whitelist")
-                ip_adresses = cursor["Ip_Adresses"]
-            else:
-                Database.insertOne("Ip_whitelist",{"_id":1,"Ip_Adresses": ["127.0.0.1","187.69.69.1"]})
-                cursor = Database.find_ip("Ip_whitelist")
-                ip_adresses = cursor["Ip_Adresses"]
+            cursor = Database.find_ip("Ip_whitelist")
+            ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
                 thread = threading.Thread(target=self.handle_client,args=(conn, data_handler, addr))
