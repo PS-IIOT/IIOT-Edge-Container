@@ -7,7 +7,10 @@ from bson import json_util
 from flask_cors import CORS
 from flask import request
 from flask import Response
+import pymongo
+import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +18,7 @@ CORS(app)
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
 mongo = PyMongo(app)
 db = mongo.db
+
 
 
 @app.route('/api/v1/machines', methods=['GET'])
@@ -87,5 +91,8 @@ def deleteIp():
 
 
 def create_app():
-    with app.app_context():
-        app.run()
+    try:
+        with app.app_context(): 
+            app.run()
+    except Exception as e:
+        logging.debug(f"{e}")
