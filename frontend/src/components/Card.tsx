@@ -2,7 +2,7 @@
 import { MachineResponse } from '../models/machine-response.model';
 export interface CardProps {
     machineData: MachineResponse;
-    className?: string;
+    // className?: string;
 }
 
 export const Card = ({ machineData }: CardProps) => {
