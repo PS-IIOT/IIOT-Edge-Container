@@ -18,12 +18,21 @@ export async function getAllowlist(): Promise<Allowlist> {
     return json_data;
 }
 
-export async function insertIP(allowListItem: string) {
+export async function insertIP(addIP: AllowlistRequest) {
     return fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines/allowlist`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(allowListItem),
+        body: JSON.stringify(addIP),
+    });
+}
+export async function deleteIp(deleteIp: AllowlistRequest) {
+    return fetch(`${import.meta.env.VITE_BACKEND_API_URL}/machines/allowlist`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(deleteIp),
     });
 }
