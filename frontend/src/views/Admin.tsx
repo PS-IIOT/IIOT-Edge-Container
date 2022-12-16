@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { AllowlistRequest } from '../models/allowlist-request.model';
 import { Allowlist } from '../models/allowlist-response.model';
-import { deleteIp, getAllowlist, insertIP } from '../services/machine.service';
+import { getAllowlist } from '../services/machine.service';
+import { insertIP, deleteIp } from '../services/allowlist.service';
 import { useForm } from 'react-hook-form';
 
 export const Admin = () => {
-    // const [addIP, setaddIP] = useState();
     const [allowlist, setAllowlist] = useState<Allowlist>();
+
     useEffect(() => {
         document.title = 'Admin-Panel';
         void getAllowlist().then((allowlist) => setAllowlist(allowlist));
-    }, [allowlist]);
+    }, []);
 
     return (
         <div className="w-1/2 h-3/4 m-5 positon relative flex flex-col justify-arround items-center bg-ColorCardBackground rounded-lg shadow-md shadow-black">
@@ -23,10 +24,13 @@ export const Admin = () => {
                 </h1>
             </div>
             {allowlist ? (
-                <AllowlistComponent allowlist={allowlist} />
+                <AllowlistComponent
+                    allowlist={allowlist}
+                    setAllowList={setAllowlist}
+                />
             ) : (
                 <div className="mt-6">
-                    <AddIP />
+                    <AddIp setAllowList={setAllowlist} />
                 </div>
             )}
             <div
@@ -39,49 +43,46 @@ export const Admin = () => {
 
 type AllowlistProps = {
     allowlist: Allowlist;
+    setAllowList: (allowlist: Allowlist) => void;
 };
 
-const AllowlistComponent = ({ allowlist }: AllowlistProps) => {
-    return (
-        <div className="flex flex-col w-full mt-6 overflow-auto">
-            {allowlist.Ip_Adresses.map((ip, index) => {
-                return (
-                    <div
-                        className="flex m-2 items-center  "
-                        // key={allowlist._id.$oid}
-                        key={index + 1}
-                    >
-                        <label className="text-white font-bold italic">
-                            {index + 1}.
-                        </label>
-                        <input
-                            className=" p-1 mx-1 border-2 rounded-md h-auto w-full"
-                            value={ip}
-                            disabled={true}
-                        />
-                        <DeleteIp delIp={ip} />
-                    </div>
-                );
-            })}
-            <AddIP />
-        </div>
-    );
+const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
+    <div className="flex flex-col w-full mt-6 overflow-auto">
+        {allowlist.Ip_Adresses.map((ip, index) => {
+            return (
+                <div className="flex m-2 items-center  " key={index + 1}>
+                    <label className="text-white font-bold italic">
+                        {index + 1}.
+                    </label>
+                    <input
+                        className=" p-1 mx-1 border-2 rounded-md h-auto w-full"
+                        value={ip}
+                        disabled={true}
+                    />
+                    <DeleteIp setAllowList={setAllowList} delIP={ip} />
+                </div>
+            );
+        })}
+        <AddIp setAllowList={setAllowList} />
+    </div>
+);
+type deleteIP = {
+    delIP: string;
+    setAllowList: (allowlist: Allowlist) => void;
 };
-
-type deleteCurrentIp = {
-    delIp: string;
-};
-const DeleteIp = ({ delIp }: deleteCurrentIp) => {
+const DeleteIp = ({ delIP, setAllowList }: deleteIP) => {
     const { handleSubmit } = useForm<AllowlistRequest>();
     const handleRemove = async (data: AllowlistRequest) => {
-        const result = confirm('Want to delete?');
+        const result = confirm(
+            `Are you sure you want to delete IP-Address: ${delIP} `
+        );
         if (result) {
-            data.ip = delIp;
+            data.ip = delIP;
             console.log(data);
-            await deleteIp(data);
+            const newAllowlist = await deleteIp(data);
+            setAllowList(newAllowlist);
         }
     };
-
     return (
         <button onClick={handleSubmit(handleRemove)}>
             <div className="w-5 h-5 fill-white hover:fill-red-500">
@@ -92,22 +93,26 @@ const DeleteIp = ({ delIp }: deleteCurrentIp) => {
         </button>
     );
 };
+type AddIpProps = {
+    setAllowList: (allowlist: Allowlist) => void;
+};
 
-const AddIP = () => {
+const AddIp = ({ setAllowList }: AddIpProps) => {
     const { register, handleSubmit } = useForm<AllowlistRequest>();
     const onSubmit = async (data: AllowlistRequest) => {
-        console.log(data);
-        await insertIP(data);
+        const newAllowlist = await insertIP(data);
+        setAllowList(newAllowlist);
     };
+
     return (
-        <div className="flex">
+        <div className="flex mb-12">
             <form onSubmit={handleSubmit(onSubmit)} className="flex w-12 ml-4">
                 <input
                     className="flex-1 rounded-md ml-2 bg-ColorAppBackground placeholder:text-white"
                     placeholder=" IP: 0.0.0.0 "
                     type="text"
                     {...register('ip', {
-                        required: 'IP-Address',
+                        required: true,
                         minLength: 7,
                         maxLength: 15,
                         pattern:
