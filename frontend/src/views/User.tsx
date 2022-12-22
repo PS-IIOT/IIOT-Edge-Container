@@ -29,17 +29,6 @@ export const User = () => {
         const data = await getAllMachines();
         setMachines(data);
     }, 10000);
-
-    // useEffect(() => {
-    //         const response = await fetch(
-    //             `${import.meta.env.VITE_BACKEND_API_URL}/machines`
-    //         );
-    //         const json_data = (await response.json()) as Machine[];
-    //         setMachines(json_data);
-    //     }, 10000);
-
-    //     return () => clearInterval(interval);
-    // }, []);
     return (
         <div className="flex-1 m-5 p-5 overflow-y-auto flex justify-around flex-wrap content-center gap-5">
             {machines ? (
