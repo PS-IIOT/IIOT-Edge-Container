@@ -1,16 +1,13 @@
-from flask import Flask
+from flask import Flask, request, Response, make_response
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 import json
-from deamon.database import Database
 from bson import json_util
 from flask_cors import CORS
-from flask import request
-from flask import Response
-import pymongo
 import logging
-
-logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+from functools import wraps
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +16,19 @@ app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineDa
 mongo = PyMongo(app)
 db = mongo.db
 
+users = {
+    "admin": "admi"
+}
+
+
+def authentication(f):
+    @wraps(f)
+    def decorated():
+        auth = request.authorization
+        if auth and auth.username in users and auth.password == users[auth.username]:
+            return f()
+        return make_response('Could not verify your login!', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
+    return decorated
 
 
 @app.route('/api/v1/machines', methods=['GET'])
@@ -55,6 +65,7 @@ def getAllErrors():
 
 
 @app.route('/api/v1/machines/allowlist', methods=['GET'])
+@authentication
 def getAllowlist():
     allowList = db["Ip_whitelist"].find_one({})
     if (allowList == None):
@@ -63,7 +74,8 @@ def getAllowlist():
     return Response(allowlistJson, mimetype='application/json', status=200)
 
 
-@ app.route('/api/v1/machines/allowlist', methods=['POST'])
+@app.route('/api/v1/machines/allowlist', methods=['POST'])
+@authentication
 def insertIp():
     ip = request.json['ip']
     newAllowlist = db["Ip_whitelist"].find_one_and_update(
@@ -71,7 +83,8 @@ def insertIp():
     return Response(json_util.dumps(newAllowlist), mimetype='application/json', status=200)
 
 
-@ app.route('/api/v1/machines/allowlist', methods=['DELETE'])
+@app.route('/api/v1/machines/allowlist', methods=['DELETE'])
+@authentication
 def deleteIp():
     ip = request.json['ip']
     allowList = db["Ip_whitelist"].find_one({})
@@ -90,7 +103,7 @@ def deleteIp():
 
 def create_app():
     try:
-        with app.app_context(): 
+        with app.app_context():
             app.run()
     except Exception as e:
         logging.debug(f"{e}")
