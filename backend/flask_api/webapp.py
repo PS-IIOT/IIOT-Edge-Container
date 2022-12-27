@@ -17,7 +17,7 @@ mongo = PyMongo(app)
 db = mongo.db
 
 users = {
-    "admin": "admi"
+    "admin": "admin"
 }
 
 
@@ -44,8 +44,7 @@ def getAllMachine():
             if machine["serialnumber"] == error["machine"]:
                 machine["errorlog"].append(error)
         machineList.append(machine)
-    item = json_util.dumps(machineList)
-    return json.loads(item)
+    return Response(json_util.dumps(machineList), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
@@ -53,15 +52,13 @@ def getOneMachine(serialnumber):
     cursor = list(db["Machinedata"].find({"serialnumber": serialnumber}))
     cursor_errorlog = list(db["Errorlog"].find({"machine": serialnumber}))
     cursor[0]["errorlog"] = cursor_errorlog[0]
-    item = json_util.dumps(cursor[0])
-    return json.loads(item)
+    return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/errors', methods=['GET'])
 def getAllErrors():
     crusor_errorlog = list(db["Errorlog"].find({}))
-    error = json_util.dumps(crusor_errorlog)
-    return json.loads(error)
+    return Response(json_util.dumps(crusor_errorlog), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/allowlist', methods=['GET'])
