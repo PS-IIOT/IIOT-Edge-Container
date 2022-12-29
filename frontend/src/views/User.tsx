@@ -22,6 +22,7 @@ export const User = () => {
     const [machines, setMachines] = useState<MachineResponse[]>();
 
     useEffect(() => {
+        document.title = 'User-Panel';
         void getAllMachines().then((data) => setMachines(data));
     }, []);
 
