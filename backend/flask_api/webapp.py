@@ -7,7 +7,10 @@ from bson import json_util
 from flask_cors import CORS
 from flask import request
 from flask import Response
+import pymongo
+import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +20,7 @@ mongo = PyMongo(app)
 db = mongo.db
 
 
+
 @app.route('/api/v1/machines', methods=['GET'])
 def getAllMachine():
     machineList = []
@@ -24,13 +28,12 @@ def getAllMachine():
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
         print(f"{machine}")
+        machine["errorlog"] = []
         for error in cursor_errorlog:
             print(f"{error}")
-
             if machine["serialnumber"] == error["machine"]:
-                machine["errorlog"] = []
                 machine["errorlog"].append(error)
-                machineList.append(machine)
+        machineList.append(machine)
     item = json_util.dumps(machineList)
     return json.loads(item)
 
@@ -40,7 +43,6 @@ def getOneMachine(serialnumber):
     cursor = list(db["Machinedata"].find({"serialnumber": serialnumber}))
     cursor_errorlog = list(db["Errorlog"].find({"machine": serialnumber}))
     cursor[0]["errorlog"] = cursor_errorlog[0]
-    print(cursor)
     item = json_util.dumps(cursor[0])
     return json.loads(item)
 
@@ -87,5 +89,8 @@ def deleteIp():
 
 
 def create_app():
-    with app.app_context():
-        app.run()
+    try:
+        with app.app_context(): 
+            app.run()
+    except Exception as e:
+        logging.debug(f"{e}")
