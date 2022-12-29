@@ -51,7 +51,10 @@ def getAllMachine():
 def getOneMachine(serialnumber):
     cursor = list(db["Machinedata"].find({"serialnumber": serialnumber}))
     cursor_errorlog = list(db["Errorlog"].find({"machine": serialnumber}))
-    cursor[0]["errorlog"] = cursor_errorlog[0]
+    try:
+        cursor[0]["errorlog"] = cursor_errorlog[0]
+    except Exception as e:
+        cursor[0]["errorlog"] = []
     return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
