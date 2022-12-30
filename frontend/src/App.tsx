@@ -4,10 +4,10 @@ import { Outlet } from 'react-router-dom';
 
 export const App = () => {
     return (
-        <div className="flex flex-col w-full h-screen position relative bg-ColorAppBackground">
+        <div className="flex flex-col w-full h-screen position relative bg-slate-300">
             <HeaderComponent statusH={true} />
             <Outlet />
-            <FooterComponent />
+            {/* <FooterComponent /> */}
         </div>
     );
 };
