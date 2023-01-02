@@ -33,7 +33,7 @@ export const Admin = () => {
                     <label htmlFor=""></label>
                 )}
             </div>
-            <div className="">
+            <div className="postion absolute left-0 bottom-0 right-0">
                 <AddIp setAllowList={setAllowlist} />
             </div>
         </div>
