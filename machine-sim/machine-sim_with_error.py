@@ -42,9 +42,11 @@ class MachineSim:
         self.temp_env = 20.0  # temp of env = min machine temp
 
         # machine physical model, parameters - our world is linear ;)
-        self.overspeed_energy_gain_per_second = 1000.0  # Watts/s that accumulate if machine is running > overspeed_sec
+        # Watts/s that accumulate if machine is running > overspeed_sec
+        self.overspeed_energy_gain_per_second = 1000.0
         self.overspeed_sec = 15
-        self.overspeed_energy_loss_per_second = 500.0  # Watts/s that go away if machine is running < overspeed_sec
+        # Watts/s that go away if machine is running < overspeed_sec
+        self.overspeed_energy_loss_per_second = 500.0
         self.machine_mass = 10.0  # kg for thermal energy capacity
         self.machine_c = 900.0  # thermal capacity
         self.T_error = 71.0  # Machine goes to error if temp is above limit
@@ -56,12 +58,14 @@ class MachineSim:
         now_time = time.time()
         self.uptime = now_time - self.start_time + self.lifetime
         if self.speed < self.overspeed_sec:
-            Q = self.overspeed_energy_gain_per_second * (self.overspeed_sec - self.speed)
+            Q = self.overspeed_energy_gain_per_second * \
+                (self.overspeed_sec - self.speed)
             dT = Q / (self.machine_c * self.machine_mass)
             self.temp = self.temp + dT
 
         if self.temp > self.temp_env and self.speed >= self.overspeed_sec:
-            Q = self.overspeed_energy_loss_per_second * (self.speed - self.overspeed_sec)
+            Q = self.overspeed_energy_loss_per_second * \
+                (self.speed - self.overspeed_sec)
             dT = Q / (self.machine_c * self.machine_mass)
             self.temp = self.temp - dT
             if self.temp < self.temp_env:
@@ -75,7 +79,7 @@ class MachineSim:
         if not err:
             self.cycle = self.cycle + 1
         a = {"version": "adstec-machine-sim-v0",
-             "data": [args.serial, 4, False, False, warn, err, self.temp, int(self.uptime), self.cycle]}
+             "datei": [args.serial, 4, False, False, warn, err, self.temp, int(self.uptime), self.cycle]}
         self.last_data = a
 
         time.sleep(self.speed)
@@ -132,10 +136,12 @@ class MachineSim:
             try:
                 self.client.connect((self.serverip, self.serverport))
             except Exception as e:
-                print('Failed to connect to {}:{}, {}'.format(self.serverip, self.serverport, e))
+                print('Failed to connect to {}:{}, {}'.format(
+                    self.serverip, self.serverport, e))
                 time.sleep(10)
                 continue
             self.connected = True
+
 
 class Ui:
     def __init__(self, sim):
@@ -144,7 +150,8 @@ class Ui:
 
     def ui_loop(self):
         while not self.terminate:
-            data = input("Commands: +/- for speed change, x for exit, d for data dump, use Enter to send command!\n")
+            data = input(
+                "Commands: +/- for speed change, x for exit, d for data dump, use Enter to send command!\n")
             if '+' == data:
                 self.sim.speed = sim.speed + 1
                 print("Speed increased: {}".format(self.sim.speed))
