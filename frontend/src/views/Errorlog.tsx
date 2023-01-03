@@ -17,15 +17,22 @@ export const Errorlog = () => {
     }, 10000);
 
     return (
-        <div className="flex-1 flex flex-col items-center">
-            <h1 className="text-4xl font-bold m-2">Errorlog</h1>
+        <div className="h-4/5 w-8/12 ml-14 mt-8 positon relative flex flex-col justify-arround bg-slate-300 rounded-lg shadow-md shadow-black">
+            <div
+                id="allowListHeader"
+                className="w-full bg-slate-400 h-10 rounded-t-md justify-center items-center"
+            >
+                <h1 className="flex justify-center items-center text-slate-100 text-xl m-1">
+                    Error list
+                </h1>
+            </div>
             <div className="w-2/4 p-2">
                 {errorlog ? (
                     errorlog.map((error) => (
                         <ErrorItem key={error.id} error={error} />
                     ))
                 ) : (
-                    <p>Loading</p>
+                    <p className="justify-center">Loading...</p>
                 )}
             </div>
         </div>

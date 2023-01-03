@@ -14,23 +14,23 @@ export const Admin = () => {
     }, []);
 
     return (
-        <div className="h-3/4 w-60 ml-14 mt-8 positon relative flex flex-col justify-arround bg-slate-300 rounded-lg shadow-md shadow-black">
+        <div className="flex justify-start flex-col flex-grow-0 w-1/5 h-4/5 ml-14 mt-8 position relative bg-slate-300 rounded-lg shadow-md shadow-black">
             <div
                 id="allowListHeader"
-                className="w-full bg-slate-400 h-10 rounded-t-md position absolute top-0 justify-center items-center"
+                className="w-full bg-slate-400 h-10 rounded-t-md justify-center items-center position absolute top-0"
             >
-                <h1 className="position absolute left-20 top-1 text-slate-100 text-xl">
+                <h1 className="flex justify-center items-center m-1 text-slate-100 text-xl">
                     Allow List
                 </h1>
             </div>
-            <div className="overflow-auto">
+            <div className="h-full mt-3 overflow-auto">
                 {allowlist ? (
                     <AllowlistComponent
                         allowlist={allowlist}
                         setAllowList={setAllowlist}
                     />
                 ) : (
-                    <label htmlFor=""></label>
+                    <h1>Loading...</h1>
                 )}
             </div>
             <div className="postion absolute left-0 bottom-0 right-0">
@@ -46,7 +46,7 @@ type AllowlistProps = {
 };
 
 const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
-    <div className="flex flex-col mt-6 ml-4">
+    <div className="flex flex-col mt-7 ml-4 mb-4">
         {allowlist.Ip_Adresses.map((ip, index) => {
             return (
                 <div className="flex mt-2" key={index + 1}>
@@ -57,7 +57,7 @@ const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
                     </div>
 
                     <input
-                        className="w-36 p-1 border-2 rounded-md h-auto text-slate-500"
+                        className="w-36 p-1 border-2 rounded-md text-slate-500"
                         value={ip}
                         disabled={true}
                     />
@@ -65,7 +65,6 @@ const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
                 </div>
             );
         })}
-        {/* <AddIp setAllowList={setAllowList} /> */}
     </div>
 );
 type deleteIP = {

@@ -24,7 +24,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
                         </svg>
                     </div>
                 </Link>
-                <Link to="/admin">
+                <Link to="/AdminPanel">
                     <div className="flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
