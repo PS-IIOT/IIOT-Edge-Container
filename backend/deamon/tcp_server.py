@@ -19,9 +19,10 @@ class Tcpsocket:
         self.server.bind((self.HOST, self.PORT))
 
     def json_validation(self, tmp):
-        pattern = {"type": "object", "properties": {"version": {"type": "string"},
-                                                    "data": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "boolean"}, {"type": "boolean"}, {"type": "boolean"},
-                                                                                              {"type": "boolean"}, {"type": "boolean"}, {"type": "number"}, {"type": "number"}, {"type": "number"}]}}}
+        pattern = {"type": "object", "minProperties": 2,
+                   "maxProperties": 2, "properties": {"version": {"type": "string"},
+                                                      "data": {"type": "array", "minItems": 9, "maxItems": 9, "prefixItems": [{"type": "string"}, {"type": "boolean"}, {"type": "boolean"}, {"type": "boolean"},
+                                                                                                                              {"type": "boolean"}, {"type": "boolean"}, {"type": "number"}, {"type": "number"}, {"type": "number"}]}}, "required": ["version", "data"]}
         validate(instance=tmp, schema=pattern)
 
     def handle_client(self, conn: socket.socket, data_handler, addr):
