@@ -7,8 +7,7 @@ import jsonschema
 from jsonschema import validate
 import logging
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Tcpsocket:
@@ -20,9 +19,9 @@ class Tcpsocket:
 
     def json_validation(self, tmp):
         pattern = {"type": "object", "minProperties": 2,
-                   "maxProperties": 2, "properties": {"version": {"type": "string"},
-                                                      "data": {"type": "array", "minItems": 9, "maxItems": 9, "prefixItems": [{"type": "string"}, {"type": "boolean"}, {"type": "boolean"}, {"type": "boolean"},
-                                                                                                                              {"type": "boolean"}, {"type": "boolean"}, {"type": "number"}, {"type": "number"}, {"type": "number"}]}}, "required": ["version", "data"]}
+        "maxProperties": 2, "properties": {"version": {"type": "string"},
+        "data": {"type": "array", "minItems": 9, "maxItems": 9, "prefixItems": [{"type": "string"}, {"type": "boolean"}, {"type": "boolean"}, {"type": "boolean"},
+        {"type": "boolean"}, {"type": "boolean"}, {"type": "number"}, {"type": "number"}, {"type": "number"}]}}, "required": ["version", "data"]}
         validate(instance=tmp, schema=pattern)
 
     def handle_client(self, conn: socket.socket, data_handler, addr):
@@ -32,20 +31,16 @@ class Tcpsocket:
                 tmp = json.loads(data)
                 self.json_validation(tmp)
                 if Database.countDocument("Errorlog", {"id": 202, "machine": tmp['data'][0]}) > 0:
-                    Database.deleteOne(
-                        "Errorlog", {"id": 202, "machine": tmp['data'][0]})
+                    Database.deleteOne("Errorlog", {"id": 202, "machine": tmp['data'][0]})
             except jsonschema.ValidationError as error:
                 logging.debug(f"No valid Json: {error.message}")
-                Database.replace("Errorlog", {"id": 202, "errormsg": error.message, "machine": tmp['data'][0]}, {
-                                 "machine": tmp['data'][0], "id": 202})
+                Database.replace("Errorlog", {"id": 202, "errormsg": error.message, "machine": tmp['data'][0]}, {"machine": tmp['data'][0], "id": 202})
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Empty Object cannot be cast to JSON {er}")
             data_handler.handle_json(data, self.timestamp())
             if not data:
-                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {
-                                   "serialnumber": tmp['data'][0]})
-                print(
-                    f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
+                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": tmp['data'][0]})
+                print(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
                 conn.close()
                 break
 

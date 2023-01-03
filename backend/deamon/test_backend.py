@@ -1,8 +1,6 @@
 import unittest
 from .tcp_server import Tcpsocket
 import jsonschema
-from jsonschema import validate
-
 
 class TestBackend(unittest.TestCase):
 
@@ -15,8 +13,7 @@ class TestBackend(unittest.TestCase):
             server.json_validation({"version": "adstec-machine-sim-v0", "data": [
                 1, False, False, False, False, False, 23.333333333333343, 71, 46]})         # int instead of string (1)
         with self.assertRaises(jsonschema.ValidationError):
-            # string instead of object
-            server.json_validation("Hallo")
+            server.json_validation("Hallo")                                                 # string instead of object
         with self.assertRaises(jsonschema.ValidationError):
             server.json_validation({"version": "adstec-machine-sim-v0", "daten": [          # daten instead of data
                 "test4", False, False, False, False, False, 23.333333333333343, 71, 46]})

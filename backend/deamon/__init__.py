@@ -4,7 +4,7 @@ import deamon.rpc_connection
 from .database import Database
 import pymongo
 import logging
-
+import deamon.test_backend
 logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 def start():
