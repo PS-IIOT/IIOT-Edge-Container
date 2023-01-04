@@ -1,5 +1,7 @@
-from flask import request, Response, make_response
-from apiflask import APIFlask
+from flask import Flask, request, Response, make_response, jsonify
+from apispec import APISpec
+from apispec_webframeworks.flask import FlaskPlugin
+from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 import json
@@ -14,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
-app = APIFlask(__name__)
+app = Flask(__name__)
 CORS(app)
 
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
@@ -25,6 +27,13 @@ users = {
     "admin": "admin"
 }
 
+spec = APISpec(
+    title="IIOT-edge-container-api-swagger-doc",
+    version="1.0.0",
+    openapi_version="3.1.0",
+    plugins=[FlaskPlugin(), MarshmallowPlugin()]
+)
+
 def authentication(f):
     @wraps(f)
     def decorated():
@@ -34,8 +43,13 @@ def authentication(f):
         return make_response('Could not verify your login!', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
     return decorated
 
+@app.route('/api/swagger.json')
+def createSwaggerSpec():
+    return jsonify(spec.to_dict())
 
-@app.get('/api/v1/machines')
+
+
+@app.route('/api/v1/machines', methods = ['GET'])
 def getAllMachine():
     machineList = []
     cursor = list(db["Machinedata"].find({}))
@@ -51,7 +65,7 @@ def getAllMachine():
     return Response(json_util.dumps(machineList), mimetype='application/json', status=200)
 
 
-@app.get('/api/v1/machines/<string:serialnumber>')
+@app.route('/api/v1/machines/<string:serialnumber>', methods = ['GET'])
 def getOneMachine(serialnumber):
     cursor = list(db["Machinedata"].find({"serialnumber": serialnumber}))
     cursor_errorlog = list(db["Errorlog"].find({"machine": serialnumber}))
@@ -62,13 +76,13 @@ def getOneMachine(serialnumber):
     return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
-@app.get('/api/v1/machines/errors')
+@app.route('/api/v1/machines/errors', methods = ['GET'])
 def getAllErrors():
     crusor_errorlog = list(db["Errorlog"].find({}))
     return Response(json_util.dumps(crusor_errorlog), mimetype='application/json', status=200)
 
 
-@app.get('/api/v1/machines/allowlist')
+@app.route('/api/v1/machines/allowlist', methods = ['GET'])
 @authentication
 def getAllowlist():
     allowList = db["Ip_whitelist"].find_one({})
@@ -78,7 +92,7 @@ def getAllowlist():
     return Response(allowlistJson, mimetype='application/json', status=200)
 
 
-@app.post('/api/v1/machines/allowlist')
+@app.route('/api/v1/machines/allowlist', methods = ['POST'])
 @authentication
 def insertIp():
     ip = request.json['ip']
@@ -89,16 +103,14 @@ def insertIp():
     return Response(json_util.dumps({}), mimetype='application/json', status=422)                       #code 422 unprocessable entity
 
 
-@app.delete('/api/v1/machines/allowlist')
+@app.route('/api/v1/machines/allowlist', methods = ['DELETE'])
 @authentication
 def deleteIp():
     ip = request.json['ip']
     allowList = db["Ip_whitelist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
-        return Response(json_util.dumps(
-            allowList
-        ), mimetype='application/json', status=404)
+        return Response(json_util.dumps(allowList), mimetype='application/json', status=404)
 
     newList.remove(ip)
     updatedList = db["Ip_whitelist"].find_one_and_update(
