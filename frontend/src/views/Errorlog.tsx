@@ -17,12 +17,12 @@ export const Errorlog = () => {
     }, 10000);
 
     return (
-        <div className="h-4/5 w-8/12 ml-14 mt-8 positon relative flex flex-col justify-arround bg-slate-300 rounded-lg shadow-md shadow-black">
+        <div className="h-4/5 w-8/12 ml-14 mt-8 positon relative flex flex-col justify-arround bg-slate-200 rounded-lg drop-shadow-xl shadow-md shadow-grey">
             <div
                 id="allowListHeader"
-                className="w-full bg-slate-400 h-10 rounded-t-md justify-center items-center"
+                className="w-full bg-slate-400 h-12 rounded-t-md justify-center items-center"
             >
-                <h1 className="flex justify-center items-center text-slate-100 text-xl m-1">
+                <h1 className="flex justify-center items-center text-slate-100 text-3git xl m-1">
                     Error list
                 </h1>
             </div>

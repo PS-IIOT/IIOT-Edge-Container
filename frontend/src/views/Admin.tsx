@@ -14,16 +14,16 @@ export const Admin = () => {
     }, []);
 
     return (
-        <div className="flex justify-start flex-col flex-grow-0 w-1/5 h-4/5 ml-14 mt-8 position relative bg-slate-300 rounded-lg shadow-md shadow-black">
+        <div className="flex justify-start flex-col flex-grow-0 w-1/5 h-4/5 ml-14 mt-8 position relative bg-slate-200 rounded-lg drop-shadow-xl shadow-md shadow-grey">
             <div
                 id="allowListHeader"
-                className="w-full bg-slate-400 h-10 rounded-t-md justify-center items-center position absolute top-0"
+                className="w-full bg-slate-400 h-12 rounded-t-md justify-center items-center position absolute top-0"
             >
-                <h1 className="flex justify-center items-center m-1 text-slate-100 text-xl">
+                <h1 className="flex justify-center items-center m-1 text-slate-100 text-3xl">
                     Allow List
                 </h1>
             </div>
-            <div className="h-full mt-3 overflow-auto">
+            <div className="h-full mt-4 overflow-auto">
                 {allowlist ? (
                     <AllowlistComponent
                         allowlist={allowlist}
