@@ -22,7 +22,7 @@ export const Errorlog = () => {
                 id="allowListHeader"
                 className="w-full bg-slate-400 h-12 rounded-t-md justify-center items-center"
             >
-                <h1 className="flex justify-center items-center text-slate-100 text-3git xl m-1">
+                <h1 className="flex justify-center items-center text-slate-100 text-3xl m-1">
                     Error list
                 </h1>
             </div>
