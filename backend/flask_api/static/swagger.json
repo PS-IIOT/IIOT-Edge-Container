@@ -1,0 +1,260 @@
+{
+    "components": {
+        "schemas": {
+            "IP": {
+                "properties": {
+                    "ip": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "allowlist": {
+                "properties": {
+                    "IP_Adresses": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "error": {
+                "properties": {
+                    "errormsg": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "integer"
+                    },
+                    "machine": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "errorlog": {
+                "properties": {
+                    "log": {
+                        "items": {
+                            "$ref": "#/components/schemas/error"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "getAllMachines": {
+                "properties": {
+                    "MachineList": {
+                        "items": {
+                            "$ref": "#/components/schemas/getMachine"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "getMachine": {
+                "properties": {
+                    "_id": {
+                        "$ref": "#/components/schemas/id"
+                    },
+                    "cycle": {
+                        "type": "integer"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "errorlog": {
+                        "items": {
+                            "$ref": "#/components/schemas/errorlog"
+                        },
+                        "type": "array"
+                    },
+                    "offline": {
+                        "type": "boolean"
+                    },
+                    "serialnumber": {
+                        "type": "string"
+                    },
+                    "temp": {
+                        "type": "number"
+                    },
+                    "ts": {
+                        "type": "string"
+                    },
+                    "uptime": {
+                        "type": "integer"
+                    },
+                    "warning": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "id": {
+                "properties": {
+                    "oid": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "none": {
+                "properties": {},
+                "type": "object"
+            }
+        }
+    },
+    "info": {
+        "title": "IIOT-edge-container-api-swagger-doc",
+        "version": "1.0.0"
+    },
+    "openapi": "3.0.0",
+    "paths": {
+        "/api/v1/machines": {
+            "get": {
+                "description": "get all machines and all errors",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/getAllMachines"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return list of all machines and all errors"
+                    }
+                }
+            }
+        },
+        "/api/v1/machines/allowlist": {
+            "delete": {
+                "description": "delete specific IP address from list",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/allowlist"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return new list of allowed IPs"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/allowlist"
+                                }
+                            }
+                        },
+                        "description": "IP not found in list, return original list"
+                    }
+                }
+            },
+            "get": {
+                "description": "get all IP addresses",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/allowlist"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return list of allowed IPs"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/none"
+                                }
+                            }
+                        },
+                        "description": "no allowlist found, return empty"
+                    }
+                }
+            },
+            "post": {
+                "description": "add an IP address",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IP"
+                            }
+                        }
+                    },
+                    "description": "create a new entry in the IP allowlist",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "application/json": {
+                            "schema": "allowlistSchema"
+                        },
+                        "description": "successful operation, IP added to list"
+                    },
+                    "422": {
+                        "application/json": {
+                            "schema": "noneSchema"
+                        },
+                        "description": "invalid IP, return empty"
+                    }
+                }
+            }
+        },
+        "/api/v1/machines/errors": {
+            "get": {
+                "description": "get all errors",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorlog"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return list of all errors"
+                    }
+                }
+            }
+        },
+        "/api/v1/machines/{serialnumber}": {
+            "get": {
+                "description": "get a single machine",
+                "parameters": [
+                    {
+                        "description": "serialnumber to identify specific machine",
+                        "in": "path",
+                        "name": "serialnumber",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/getMachine"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return data of a single machine"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,11 +1,8 @@
-from flask import Flask, request, Response, make_response, jsonify, render_template, send_from_directory
-from apispec import APISpec
-from apispec_webframeworks.flask import FlaskPlugin
-from apispec.ext.marshmallow import MarshmallowPlugin
+from flask import Flask, request, Response, make_response, send_from_directory
 from marshmallow import Schema, fields
+from flask_swagger_ui import get_swaggerui_blueprint
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
-import json
 from bson import json_util
 from flask_cors import CORS
 import logging
@@ -17,7 +14,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
-app = Flask(__name__, template_folder='swagger/templates')
+app = Flask(__name__)
 CORS(app)
 
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
@@ -28,13 +25,6 @@ users = {
     "admin": "admin"
 }
 
-spec = APISpec(
-    title="IIOT-edge-container-api-swagger-doc",
-    version="1.0.0",
-    openapi_version="3.1.0",
-    plugins=[FlaskPlugin(), MarshmallowPlugin()]
-)
-
 def authentication(f):
     @wraps(f)
     def decorated():
@@ -44,44 +34,13 @@ def authentication(f):
         return make_response('Could not verify your login!', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
     return decorated
 
-@app.route('/api/swagger.json')
-def createSwaggerSpec():
-    return jsonify(spec.to_dict())
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
-class errorSchema(Schema):
-    id = fields.Integer()
-    errormsg = fields.String()
-    machine = fields.String()
+swaggerui_blueprint = get_swaggerui_blueprint('/docs', '/static/swagger.json')
 
-class errorlogSchema(Schema):
-    log = fields.List(fields.Nested(errorSchema))
-
-class idSchema(Schema):
-    oid = fields.String()
-
-class getMachineSchema(Schema):
-    _id = fields.Nested(idSchema)
-    serialnumber = fields.String()
-    warning = fields.Boolean()
-    error = fields.Boolean()
-    ts = fields.String()
-    uptime = fields.Integer()
-    temp = fields.Float()
-    cycle = fields.Integer()
-    offline = fields.Boolean()
-    errorlog = fields.List(fields.Nested(errorlogSchema))
-
-class getAllMachinesSchema(Schema):
-    MachineList = fields.List(fields.Nested(getMachineSchema))
-
-class allowlistSchema(Schema):
-    IP_Adresses = fields.List(fields.String())
-
-class IPSchema(Schema):
-    ip = fields.String()
-
-class noneSchema(Schema):
-    None
+app.register_blueprint(swaggerui_blueprint, url_prefix='/docs')
 
 @app.route('/api/v1/machines', methods = ['GET'])
 def getAllMachine():
@@ -241,22 +200,6 @@ def deleteIp():
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
     return Response(json_util.dump(updatedList), mimetype='application/json', status=200)
-
-with app.test_request_context():
-    spec.path(view=getAllMachine)
-    spec.path(view=getOneMachine)
-    spec.path(view=getAllErrors)
-    spec.path(view=getAllowlist)
-    spec.path(view=insertIp)
-    spec.path(view=deleteIp)
-
-@app.route('/docs')
-@app.route('/docs/<path:path>')
-def swaggerDocs(path=None):
-    if not path or path == 'index.html':
-        return render_template('index.html', base_url='/docs')
-    else:
-        send_from_directory('./swagger/static', path)
 
 def create_app():
     try:
