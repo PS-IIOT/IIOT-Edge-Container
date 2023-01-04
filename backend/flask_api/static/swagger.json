@@ -197,16 +197,27 @@
                 },
                 "responses": {
                     "200": {
-                        "application/json": {
-                            "schema": "allowlistSchema"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/allowlist"
+                                }
+                            }
                         },
                         "description": "successful operation, IP added to list"
                     },
                     "422": {
-                        "application/json": {
-                            "schema": "noneSchema"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/none"
+                                }
+                            }
                         },
                         "description": "invalid IP, return empty"
+                    },
+                    "default": {
+                        "description": "successful operation"
                     }
                 }
             }
