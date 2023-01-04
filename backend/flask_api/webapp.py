@@ -1,5 +1,4 @@
 from flask import Flask, request, Response, make_response, send_from_directory
-from marshmallow import Schema, fields
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads

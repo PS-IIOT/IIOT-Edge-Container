@@ -96,7 +96,7 @@
             },
             "id": {
                 "properties": {
-                    "oid": {
+                    "$oid": {
                         "type": "string"
                     }
                 },
