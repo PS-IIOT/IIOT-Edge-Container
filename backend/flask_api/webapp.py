@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, make_response, jsonify
+from flask import Flask, request, Response, make_response, jsonify, render_template, send_from_directory
 from apispec import APISpec
 from apispec_webframeworks.flask import FlaskPlugin
 from apispec.ext.marshmallow import MarshmallowPlugin
@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='swagger/templates')
 CORS(app)
 
 app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
@@ -107,7 +107,7 @@ def getAllMachine():
             if machine["serialnumber"] == error["machine"]:
                 machine["errorlog"].append(error)
         machineList.append(machine)
-    return Response(getAllMachinesSchema().dumps({'MachineList': machineList}), mimetype='application/json', status=200)
+    return Response(json_util.dumps(machineList), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/<string:serialnumber>', methods = ['GET'])
@@ -136,7 +136,7 @@ def getOneMachine(serialnumber):
         cursor[0]["errorlog"] = cursor_errorlog[0]
     except Exception as e:
         cursor[0]["errorlog"] = []
-    return Response(getMachineSchema().dumps(cursor[0]), mimetype='application/json', status=200)
+    return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/errors', methods = ['GET'])
@@ -153,7 +153,7 @@ def getAllErrors():
                             schema: errorlogSchema
     """
     crusor_errorlog = list(db["Errorlog"].find({}))
-    return Response(errorlogSchema().dumps({'log': crusor_errorlog}), mimetype='application/json', status=200)
+    return Response(json_util.dumps(crusor_errorlog), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/allowlist', methods = ['GET'])
@@ -178,7 +178,7 @@ def getAllowlist():
     allowList = db["Ip_whitelist"].find_one({})
     if (allowList == None):
         return Response(json_util.dumps({}), mimetype='application/json', status=404)
-    return Response(allowlistSchema().dumps(allowList), mimetype='application/json', status=200)
+    return Response(json_util.dumps(allowList), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/machines/allowlist', methods = ['POST'])
@@ -208,7 +208,7 @@ def insertIp():
     if(re.search(IPregex, ip)):
         newAllowlist = db["Ip_whitelist"].find_one_and_update(
             {}, {"$push": {"Ip_Adresses": ip}}, upsert=True, return_document=True)
-        return Response(allowlistSchema().dumps({'IP_Adresses': newAllowlist}), mimetype='application/json', status=200)
+        return Response(json_util.dumps(newAllowlist), mimetype='application/json', status=200)
     return Response(json_util.dumps({}), mimetype='application/json', status=422)                       #code 422 unprocessable entity
 
 
@@ -235,12 +235,12 @@ def deleteIp():
     allowList = db["Ip_whitelist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
-        return Response(allowlistSchema().dumps({'IP_Adresses': allowList}), mimetype='application/json', status=404)
+        return Response(json_util.dump(allowList), mimetype='application/json', status=404)
     newList.remove(ip)
     updatedList = db["Ip_whitelist"].find_one_and_update(
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
-    return Response(allowlistSchema().dumps({'IP_Adresses': updatedList}), mimetype='application/json', status=200)
+    return Response(json_util.dump(updatedList), mimetype='application/json', status=200)
 
 with app.test_request_context():
     spec.path(view=getAllMachine)
@@ -249,6 +249,14 @@ with app.test_request_context():
     spec.path(view=getAllowlist)
     spec.path(view=insertIp)
     spec.path(view=deleteIp)
+
+@app.route('/docs')
+@app.route('/docs/<path:path>')
+def swaggerDocs(path=None):
+    if not path or path == 'index.html':
+        return render_template('index.html', base_url='/docs')
+    else:
+        send_from_directory('./swagger/static', path)
 
 def create_app():
     try:
