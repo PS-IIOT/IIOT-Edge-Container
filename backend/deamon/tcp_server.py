@@ -66,5 +66,5 @@ class Tcpsocket:
     def timestamp(self):
         dt = datetime.now()
         ts = str(dt.isoformat('T'))
-        tu = ts[:len(str(ts))-3]+'Z'
+        tu = ts[:len(str(ts))-3]+'+01:00'
         return tu
