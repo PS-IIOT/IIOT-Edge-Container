@@ -29,3 +29,8 @@ class TestBackend(unittest.TestCase):
         with self.assertRaises(jsonschema.ValidationError):
             self.server.json_validation({"version": "adstec-machine-sim-v0", "data": [           # 1 less item in array
                 "test4", False, False, False, False, False, 23.333333333333343, 71]})
+
+
+
+if __name__ == "__main__":
+    unittest.main()
