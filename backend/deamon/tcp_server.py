@@ -51,6 +51,7 @@ class Tcpsocket:
         self.server.listen()
         while True:
             conn, addr = self.server.accept()
+            tmp = conn.recv(1024)
             cursor = Database.find_ip("Ip_whitelist")
             ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
@@ -60,6 +61,8 @@ class Tcpsocket:
                 thread.start()
             else:
                 print("Wrong Ip")
+                Database.replace("Errorlog", {"id": 101, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
+                "machine": tmp['data'][0]}, {"machine": tmp['data'][0], "id": 101})
                 conn.shutdown(socket.SHUT_RDWR)
                 conn.close()
 
