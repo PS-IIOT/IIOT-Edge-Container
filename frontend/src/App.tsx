@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 export const App = () => {
     return (
-        <div className="flex flex-col w-full h-screen position relative bg-slate-300 overflow-hidden">
+        <div className="flex flex-col w-full h-screen position relative bg-slate-300 overflow-auto">
             <HeaderComponent statusH={true} />
             <Outlet />
             <FooterComponent />
