@@ -1,5 +1,5 @@
 import unittest
-from .webapp import app
+from flask_api.webapp import app
 import base64
 
 
@@ -40,19 +40,18 @@ class TestFlaskApi(unittest.TestCase):
         response = self.app.get("/api/v1/machines/test2")
         self.assertEqual(response.status_code,200)
 
-
     def test_getAllErrors(self):
         response = self.app.get("/api/v1/machines/errors")
         self.assertEqual(response.mimetype,"application/json")
         self.assertEqual(response.status_code,200)
 
     def test_insertIp(self):
-        response = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1"})
+        response = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1"})      # will change because Ipregex check is implemented on different branche
         self.assertEqual(response.mimetype,"application/json")
         self.assertEqual(response.status_code,200)
     
     def test_deleteIp(self):
-        response = self.open_with_auth("/api/v1/machines/allowlist","DELETE","admin","admin",{"ip":"127.0.0.1"})
+        response = self.open_with_auth("/api/v1/machines/allowlist","DELETE","admin","admin",{"ip":"127.0.0.1"})    # will change because Ipregex check is implemented on different branche
         self.assertEqual(response.mimetype,"application/json")
         self.assertEqual(response.status_code,200)
 

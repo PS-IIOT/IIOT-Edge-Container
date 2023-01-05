@@ -1,12 +1,13 @@
 import unittest
-from .tcp_server import Tcpsocket
+from deamon.tcp_server import Tcpsocket
 import jsonschema
+import socket
 
 class TestBackend(unittest.TestCase):
     def setUp(self) -> None:
         self.server = Tcpsocket()
     def tearDown(self) -> None:
-        pass
+        self.server.__del__()
 
     def test_json_validator(self):
         with self.assertRaises(jsonschema.ValidationError):

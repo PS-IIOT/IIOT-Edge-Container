@@ -16,6 +16,9 @@ class Tcpsocket:
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.HOST, self.PORT))
+    
+    def __del__(self):
+        self.server.close()
 
     def json_validation(self, tmp):
         pattern = {"type": "object", "minProperties": 2,
