@@ -4,18 +4,28 @@ from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 from bson import json_util
 from flask_cors import CORS
+from flask import request
+from flask import Response
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+import pymongo
 import logging
 from functools import wraps
 import re
 
-logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
 app = Flask(__name__)
 CORS(app)
 
-app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
+dotenv_path = Path('backend\.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+app.config["MONGO_URI"] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 db = mongo.db
 
@@ -238,6 +248,6 @@ def login():
 def create_app():
     try:
         with app.app_context():
-            app.run()
+            app.run(host="0.0.0.0")
     except Exception as e:
         logging.debug(f"{e}")
