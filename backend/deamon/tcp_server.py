@@ -55,6 +55,8 @@ class Tcpsocket:
             cursor = Database.find_ip("Ip_whitelist")
             ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
+                if Database.countDocument("Errorlog", {"id": 101, "machine": tmp['data'][0]}) > 0:
+                    Database.deleteOne("Errorlog", {"id": 101, "machine": tmp['data'][0]})
                 print(f"Connected by {addr}")
                 thread = threading.Thread(
                     target=self.handle_client, args=(conn, data_handler, addr))
