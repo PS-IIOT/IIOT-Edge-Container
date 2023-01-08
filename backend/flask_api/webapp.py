@@ -101,7 +101,7 @@ def getOneMachine(serialnumber):
     return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
-@app.route('/api/v1/machines/errors', methods=['GET'])
+@app.route('/api/v1/errorlog', methods=['GET'])
 def getAllErrors():
     """Get a list of all errors
         ---
@@ -198,12 +198,12 @@ def deleteIp():
     allowList = db["Ip_whitelist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
-        return Response(json_util.dump(allowList), mimetype='application/json', status=404)
+        return Response(json_util.dumps(allowList), mimetype='application/json', status=404)
     newList.remove(ip)
     updatedList = db["Ip_whitelist"].find_one_and_update(
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
-    return Response(json_util.dump(updatedList), mimetype='application/json', status=200)
+    return Response(json_util.dumps(updatedList), mimetype='application/json', status=200)
 
 
 @app.route('/api/v1/login', methods=['POST'])

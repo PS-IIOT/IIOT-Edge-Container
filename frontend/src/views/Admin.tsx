@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AllowlistRequest } from '../models/allowlist-request.model';
-import { Allowlist } from '../models/allowlist-response.model';
-import { getAllowlist } from '../services/machine.service';
+import { AllowlistResponse } from '../models/allowlist-response.model';
+import { getAllowlist } from '../services/allowlist.service';
 import { insertIP, deleteIp } from '../services/allowlist.service';
 import { useForm } from 'react-hook-form';
 
 export const Admin = () => {
-    const [allowlist, setAllowlist] = useState<Allowlist>();
+    const [allowlist, setAllowlist] = useState<AllowlistResponse>();
 
     useEffect(() => {
         document.title = 'Admin-Panel';
@@ -41,8 +41,8 @@ export const Admin = () => {
 };
 
 type AllowlistProps = {
-    allowlist: Allowlist;
-    setAllowList: (allowlist: Allowlist) => void;
+    allowlist: AllowlistResponse;
+    setAllowList: (allowlist: AllowlistResponse) => void;
 };
 
 const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
@@ -69,7 +69,7 @@ const AllowlistComponent = ({ allowlist, setAllowList }: AllowlistProps) => (
 );
 type deleteIP = {
     delIP: string;
-    setAllowList: (allowlist: Allowlist) => void;
+    setAllowList: (allowlist: AllowlistResponse) => void;
 };
 const DeleteIp = ({ delIP, setAllowList }: deleteIP) => {
     const { handleSubmit } = useForm<AllowlistRequest>();
@@ -95,7 +95,7 @@ const DeleteIp = ({ delIP, setAllowList }: deleteIP) => {
     );
 };
 type AddIpProps = {
-    setAllowList: (allowlist: Allowlist) => void;
+    setAllowList: (allowlist: AllowlistResponse) => void;
 };
 
 const AddIp = ({ setAllowList }: AddIpProps) => {

@@ -1,26 +1,19 @@
-export function loginUser(username: string, password: string): boolean {
-    console.log('loginUser: ', username, password);
-    const tempUser = { username: 'admin', password: 'admin' };
-    console.log(
-        'usernameBool',
-        username === tempUser.username,
-        username,
-        tempUser.username
+import { LoginRequest } from '../models/login-request.model';
+import { LoginResponse } from '../models/login-response.model';
+
+export async function loginUser(
+    userCredentials: LoginRequest
+): Promise<LoginResponse> {
+    const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_API_URL}/login`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userCredentials),
+        }
     );
-    console.log(
-        'passwordBool',
-        password === tempUser.password,
-        password,
-        tempUser.password
-    );
-    if (username === tempUser.username && password === tempUser.password) {
-        return true;
-    } else {
-        return false;
-    }
-    // const response = await fetch(
-    // `${import.meta.env.VITE_BACKEND_API_URL}/login`;
-    // );
-    // const json_data = (await response.json()) as Allowlist;
-    // return json_data;
+    const json_data = (await response.json()) as LoginResponse;
+    return json_data;
 }

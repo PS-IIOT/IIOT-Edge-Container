@@ -1,19 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/login.service';
 
 export const Login = () => {
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
-    const onSubmit = (formData: unknown) => {
-        const userIsLogedIn = loginUser(formData.username, formData.password);
-        console.log('userIsLogedIn', userIsLogedIn);
-        if (userIsLogedIn == true) {
+
+    useEffect(() => {
+        if (sessionStorage.getItem('username') != null) {
             navigate('/AdminPanel');
-        } else {
-            alert('wrong input');
         }
+    }, []);
+
+    const onSubmit = async (formData: unknown) => {
+        const userCredentials = {
+            username: formData.username,
+            password: formData.password,
+        };
+        await loginUser(userCredentials).then((response) => {
+            if (response.successLogin == true) {
+                navigate('/AdminPanel');
+                sessionStorage.setItem('username', formData.username);
+                sessionStorage.setItem('password', formData.username);
+            } else {
+                navigate('/Login');
+            }
+        });
     };
     return (
         <div

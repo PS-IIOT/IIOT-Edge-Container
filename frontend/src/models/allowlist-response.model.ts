@@ -5,7 +5,7 @@
 // 	"Ip_Adresses": []
 // }
 
-export type Allowlist = {
+export type AllowlistResponse = {
     _id: {
         $oid: string;
     };
