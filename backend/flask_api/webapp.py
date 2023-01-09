@@ -24,6 +24,7 @@ users = {
     "admin": "admin"
 }
 
+
 def authentication(f):
     @wraps(f)
     def decorated():
@@ -33,15 +34,18 @@ def authentication(f):
         return make_response('Could not verify your login!', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
     return decorated
 
+
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
+
 
 swaggerui_blueprint = get_swaggerui_blueprint('/docs', '/static/swagger.json')
 
 app.register_blueprint(swaggerui_blueprint, url_prefix='/docs')
 
-@app.route('/api/v1/machines', methods = ['GET'])
+
+@app.route('/api/v1/machines', methods=['GET'])
 def getAllMachine():
     """Get a list of all machines and their corresponding errors
         ---
@@ -68,7 +72,7 @@ def getAllMachine():
     return Response(json_util.dumps(machineList), mimetype='application/json', status=200)
 
 
-@app.route('/api/v1/machines/<string:serialnumber>', methods = ['GET'])
+@app.route('/api/v1/machines/<string:serialnumber>', methods=['GET'])
 def getOneMachine(serialnumber):
     """Get data of a single machine by ID
         ---
@@ -97,7 +101,7 @@ def getOneMachine(serialnumber):
     return Response(json_util.dumps(cursor[0]), mimetype='application/json', status=200)
 
 
-@app.route('/api/v1/machines/errors', methods = ['GET'])
+@app.route('/api/v1/errorlog', methods=['GET'])
 def getAllErrors():
     """Get a list of all errors
         ---
@@ -114,7 +118,7 @@ def getAllErrors():
     return Response(json_util.dumps(crusor_errorlog), mimetype='application/json', status=200)
 
 
-@app.route('/api/v1/machines/allowlist', methods = ['GET'])
+@app.route('/api/v1/machines/allowlist', methods=['GET'])
 @authentication
 def getAllowlist():
     """Get all IP addresses in allowlist
@@ -139,7 +143,7 @@ def getAllowlist():
     return Response(json_util.dumps(allowList), mimetype='application/json', status=200)
 
 
-@app.route('/api/v1/machines/allowlist', methods = ['POST'])
+@app.route('/api/v1/machines/allowlist', methods=['POST'])
 @authentication
 def insertIp():
     """Add an IP address to the allowlist
@@ -163,14 +167,15 @@ def insertIp():
                         schema: noneSchema 
     """
     ip = request.json['ip']
-    if(re.search(IPregex, ip)):
+    if (re.search(IPregex, ip)):
         newAllowlist = db["Ip_whitelist"].find_one_and_update(
             {}, {"$push": {"Ip_Adresses": ip}}, upsert=True, return_document=True)
         return Response(json_util.dumps(newAllowlist), mimetype='application/json', status=200)
-    return Response(json_util.dumps({}), mimetype='application/json', status=422)                       #code 422 unprocessable entity
+    # code 422 unprocessable entity
+    return Response(json_util.dumps({}), mimetype='application/json', status=422)
 
 
-@app.route('/api/v1/machines/allowlist', methods = ['DELETE'])
+@app.route('/api/v1/machines/allowlist', methods=['DELETE'])
 @authentication
 def deleteIp():
     """Delete an entry in the allowlist
@@ -193,12 +198,45 @@ def deleteIp():
     allowList = db["Ip_whitelist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
-        return Response(json_util.dump(allowList), mimetype='application/json', status=404)
+        return Response(json_util.dumps(allowList), mimetype='application/json', status=404)
     newList.remove(ip)
     updatedList = db["Ip_whitelist"].find_one_and_update(
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
-    return Response(json_util.dump(updatedList), mimetype='application/json', status=200)
+    return Response(json_util.dumps(updatedList), mimetype='application/json', status=200)
+
+
+@app.route('/api/v1/login', methods=['POST'])
+def login():
+    """Login to API
+        ---
+        post:
+            description: login to API
+            requestBody:
+                description: login to API
+                content:
+                    application/json:
+                        schema: loginSchema
+                required: true
+            responses:
+                200:
+                    description: successful operation, return true
+                    content:
+                        application/json:
+                            schema: loginResponseSchema
+                401:
+                    description: invalid credentials, return false
+                    content:
+                        application/json:
+                            schema: loginResponseSchema
+                    required: true
+    """
+    username = request.json['username']
+    password = request.json['password']
+    if (username in users and users[username] == password):
+        return Response(json_util.dumps({"successLogin": True}), mimetype='application/json', status=200)
+    return Response(json_util.dumps({"successLogin": False}), mimetype='application/json', status=401)
+
 
 def create_app():
     try:
