@@ -5,7 +5,7 @@ import os
 
 
 class Database(object):
-    dotenv_path = Path('backend\.env')
+    dotenv_path = Path('backend/.env')
     load_dotenv(dotenv_path=dotenv_path)
     URI = os.getenv('MONGO_URI')
     DATABASE = None
