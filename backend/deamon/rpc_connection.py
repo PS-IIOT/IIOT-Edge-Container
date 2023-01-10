@@ -50,6 +50,20 @@ class Rpcconnection:
     def wwh_status(self):
         if not self.sid:
             self.session_create()
+        push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, requestData]}
+        push_json["id"] = self.count
+        self.increment()
+        push_json["params"][0] = self.sid
+        push_json["params"][1] = "status"
+        push_json["params"][2] = "get"
+        requestData = {"function": "link_state", "parameters": ["eth1", ""]}
+        push = requests.post(self.HOST, json=push_json)
+        push_response = push.json()
+        return push_response
+
+    def link_state(self):
+        if not self.sid:
+            self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {}]}
         push_json["id"] = self.count
         self.increment()
@@ -58,9 +72,7 @@ class Rpcconnection:
         push_json["params"][2] = "status"
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
-        #print("response: ", push_response)
         return push_response
 
     def send_data(self, converted_data):
         self.blxpush_push(converted_data)
-        self.wwh_status()
