@@ -14,7 +14,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
                 </span>
             </div>
             <div className="flex justify-around items-center">
-                <Link to="/errorlog">
+                <Link to="/ErrorlogUser">
                     <div className="m-5 flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
