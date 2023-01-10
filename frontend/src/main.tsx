@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { User } from './views/User';
 import { AdminPanel } from './views/AdminPanel';
 import { ErrorLogUser } from './views/ErrorlogUser';
-import { Login } from './components/Login';
+import { Login } from './views/Login';
 
 const router = createBrowserRouter([
     {

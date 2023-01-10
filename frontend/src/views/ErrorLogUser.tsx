@@ -1,4 +1,4 @@
-import { Errorlog } from './Errorlog';
+import { Errorlog } from '../components/Errorlog';
 
 export const ErrorLogUser = () => {
     return (
