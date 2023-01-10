@@ -102,6 +102,25 @@
                 },
                 "type": "object"
             },
+            "loginResponseSchema": {
+                "properties": {
+                    "successLogin": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "loginSchema": {
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "none": {
                 "properties": {},
                 "type": "object"
@@ -218,6 +237,44 @@
                     },
                     "default": {
                         "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "description": "login to API",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/loginSchema"
+                            }
+                        }
+                    },
+                    "description": "login to API",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loginResponseSchema"
+                                }
+                            }
+                        },
+                        "description": "successful operation, return true"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loginResponseSchema"
+                                }
+                            }
+                        },
+                        "description": "invalid credentials, return false"
                     }
                 }
             }
