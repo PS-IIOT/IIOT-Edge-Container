@@ -47,7 +47,7 @@ class Rpcconnection:
             self.sid = None
             self.blxpush_push(push_data)
 
-    def wwh_status(self):
+    def link_state(self):
         if not self.sid:
             self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, requestData]}
@@ -61,7 +61,7 @@ class Rpcconnection:
         push_response = push.json()
         return push_response
 
-    def link_state(self):
+    def wwh_status(self):
         if not self.sid:
             self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {}]}
