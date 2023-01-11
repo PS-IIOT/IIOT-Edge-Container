@@ -2,7 +2,6 @@
 import { MachineResponse } from '../models/machine-response.model';
 export interface CardProps {
     machineData: MachineResponse;
-    // className?: string;
 }
 
 export const Card = ({ machineData }: CardProps) => {
@@ -119,10 +118,6 @@ const CardHeader = ({ machineData }: CardProps) => {
                                 TCP On
                             </p>
                         </div>
-                        // <StatusMachine
-                        //     warning={machineData.warning}
-                        //     error={machineData.error}
-                        // />
                     )}
                 </div>
             </div>
@@ -181,9 +176,8 @@ const CardFooter = ({ machineData }: CardProps) => {
                 <div className="w-full h-7 bg-slate-400"></div>
             ) : (
                 <div>
-                    {machineData.errorlog.length ? (
+                    {machineData.errorlog ? (
                         <div className="flex justify-center items-center w-full h-7 bg-red-500">
-                            {' '}
                             <div className="flex justify-center items-center fill-white drop-shadow-2xl w-6 h-6">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
