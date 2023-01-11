@@ -16,8 +16,8 @@ const test = {
     ts: '2022-11-28T20:14:05.077Z',
     uptime: 0,
     warning: false,
-    offline: true,
-    errorlog: [(1, 3)],
+    offline: false,
+    errorlog: [1, 3],
 };
 export const User = () => {
     const [machines, setMachines] = useState<MachineResponse[]>();

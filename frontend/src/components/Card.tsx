@@ -175,7 +175,6 @@ const CardTemperature = ({ machineData }: CardProps) => {
 };
 
 const CardFooter = ({ machineData }: CardProps) => {
- 
     return (
         <div>
             {machineData.offline ? (
@@ -185,7 +184,7 @@ const CardFooter = ({ machineData }: CardProps) => {
                     {machineData.errorlog.length ? (
                         <div className="flex justify-center items-center w-full h-7 bg-red-500">
                             {' '}
-                            <div className="flex justify-center items-center fill-yellow-400 drop-shadow-2xl w-6 h-6">
+                            <div className="flex justify-center items-center fill-white drop-shadow-2xl w-6 h-6">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"

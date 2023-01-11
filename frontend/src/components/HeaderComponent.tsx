@@ -1,9 +1,42 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useInterval } from '../hooks/useInterval';
+import { ErrorlogResponse } from '../models/errorlog-response.model';
+import { getAllErrors } from '../services/errorlog.service';
 
 interface statusHeaderProps {
     statusH: boolean;
 }
+const test = [
+    {
+        _id: {
+            $oid: 'test1',
+        },
+        errormsg: 'testError',
+        id: 1,
+        machine: 'test',
+    },
+    {
+        _id: {
+            $oid: 'test2',
+        },
+        errormsg: 'testError',
+        id: 1,
+        machine: 'test',
+    },
+];
+
 export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
+    const [allErrors, setallErrors] = useState<ErrorlogResponse[]>(test);
+
+    useEffect(() => {
+        void getAllErrors().then((allErrors) => setallErrors(allErrors));
+    }, []);
+
+    useInterval(async () => {
+        const data = await getAllErrors();
+        setallErrors(data);
+    }, 10000);
     return (
         <div className="flex justify-between items-center w-11/12 mx-auto my-3 rounded-xl drop-shadow-xl shadow-md shadow-grey h-20 bg-slate-200">
             <div className="w-auto h-auto m-5">
@@ -15,13 +48,32 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
             </div>
             <div className="flex justify-around items-center">
                 <Link to="/ErrorlogUser">
-                    <div className="m-5 flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                        >
-                            <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z" />
-                        </svg>
+                    <div>
+                        {allErrors ? (
+                            <div className="mr-8 positon relative flex justify-start">
+                                <div className="flex justify-center items-center bg-black fill-yellow-400 drop-shadow-2xl w-2 h-5 position relative">
+                                    <svg
+                                        className="position absolute w-8"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z" />
+                                    </svg>
+                                </div>
+                                <div className="bg-yellow-400 position absolute left-4 bottom-4 flex justify-center item-center top- text-xs w-4 h-4 rounded-full">
+                                    {allErrors.length}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="m-5 flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                >
+                                    <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z" />
+                                </svg>
+                            </div>
+                        )}
                     </div>
                 </Link>
 
