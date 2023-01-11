@@ -10,4 +10,5 @@ export type MachineResponse = {
     uptime: number;
     warning: boolean;
     offline: boolean;
+    errorlog: [];
 };
