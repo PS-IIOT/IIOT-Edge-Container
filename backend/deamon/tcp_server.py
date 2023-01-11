@@ -52,11 +52,12 @@ class Tcpsocket:
         while True:
             conn, addr = self.server.accept()
             tmp = conn.recv(1024)
+            data = json.loads(tmp)
             cursor = Database.find_ip("Ip_whitelist")
             ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
-                if Database.countDocument("Errorlog", {"errorcode": 42, "machine": tmp['data'][0]}) > 0:
-                    Database.deleteOne("Errorlog", {"errorcode": 42, "machine": tmp['data'][0]})
+                if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
+                    Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
                 print(f"Connected by {addr}")
                 thread = threading.Thread(
                     target=self.handle_client, args=(conn, data_handler, addr))
@@ -64,7 +65,7 @@ class Tcpsocket:
             else:
                 print("Wrong Ip")
                 Database.replace("Errorlog", {"errorcode": 42, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
-                "machine": tmp['data'][0]}, {"machine": tmp['data'][0], "errorcode": 42})
+                "machine": data['data'][0]}, {"machine": data['data'][0], "errorcode": 42})
                 conn.shutdown(socket.SHUT_RDWR)
                 conn.close()
 
