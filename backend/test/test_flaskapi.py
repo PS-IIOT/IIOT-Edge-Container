@@ -33,10 +33,14 @@ class TestFlaskApi(unittest.TestCase):
             )
 
     def test_insertIp(self):
-        response_toomanyNibble = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1.1"})
-        response_toobigNibble = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"1271.0.0.1"})
-        self.assertEqual(response_toomanyNibble.status_code,422)
-        self.assertEqual(response_toobigNibble.status_code,422)
+        response_toolongIpAdress = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1.1"})
+        response_tooBigIpAdress = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"1271.0.0.1"})
+        response_tooshortIpAdress = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0"})
+        response_negativeValues = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"-127.0.0.1"})
+        self.assertEqual(response_toolongIpAdress.status_code,422)
+        self.assertEqual(response_tooBigIpAdress.status_code,422)
+        self.assertEqual(response_tooshortIpAdress.status_code,422)
+        self.assertEqual(response_negativeValues.status_code,422)
 
     def test_login(self):
         response_correctLogin = self.app.post("/api/v1/login",json ={"username":"admin","password":"admin"})

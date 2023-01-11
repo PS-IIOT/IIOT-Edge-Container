@@ -55,8 +55,7 @@ class Tcpsocket:
             ip_adresses = cursor["Ip_Adresses"]
             if addr[0] in ip_adresses:
                 print(f"Connected by {addr}")
-                thread = threading.Thread(
-                    target=self.handle_client, args=(conn, data_handler, addr))
+                thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))
                 thread.start()
             else:
                 print("Wrong Ip")
