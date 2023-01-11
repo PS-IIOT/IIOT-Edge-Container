@@ -24,14 +24,14 @@ class Datahandler:
             wwh_status = self.rpc.wwh_status()
             link_state = self.rpc.link_state()
             if (link_state["result"][1]["link_state"] == "no"):
-                Database.replace("Errorlog", {"id": 42, "cloud_connection": "offline"}, {"id": 42})
+                Database.replace("Errorlog", {"id": 42, "errormsg": "Linkstate offline, check ETH Port 1"}, {"id": 42})
             else:
                 Database.deleteOne("Errorlog", {"id": 42})
                 
             if (wwh_status["result"][1]["status"]["link"] == "offline"):
-                Database.replace("Errorlog", {"id": 303, "biglinx_connection": wwh_status["result"][1]["status"]["link"]}, {"id": 303})
+                Database.replace("Errorlog", {"id": 41, "errormsg": "WWH Status "+ wwh_status["result"][1]["status"]["link"]+" check your WWH Connection"}, {"id": 41})
             else:
-                Database.deleteOne("Errorlog", {"id": 303})
+                Database.deleteOne("Errorlog", {"id": 41})
             self.rpc.send_data(conv_json_object_rpc)
         except Exception as e:
             logging.debug(f"RPC Failed to send Data {e}")
