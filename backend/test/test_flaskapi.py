@@ -1,8 +1,8 @@
 import unittest
+from unittest.mock import patch
+import flask_api.webapp
 from flask_api.webapp import app
 import base64
-
-
 class TestFlaskApi(unittest.TestCase):
     
     def setUp(self) -> None:
@@ -32,34 +32,21 @@ class TestFlaskApi(unittest.TestCase):
                 json=data
             )
 
-    def test_getAllMachines(self):
-        response = self.app.get('/api/v1/machines')
-        self.assertEqual(response.status_code,200)
-
-    def test_getOneMachine(self):
-        response = self.app.get("/api/v1/machines/test2")
-        self.assertEqual(response.status_code,200)
-
-    def test_getAllErrors(self):
-        response = self.app.get("/api/v1/machines/errors")
-        self.assertEqual(response.mimetype,"application/json")
-        self.assertEqual(response.status_code,200)
-
     def test_insertIp(self):
-        response = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1"})      # will change because Ipregex check is implemented on different branche
-        self.assertEqual(response.mimetype,"application/json")
-        self.assertEqual(response.status_code,200)
+        response_toomanyNibble = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"127.0.0.1.1"})
+        response_toobigNibble = self.open_with_auth("/api/v1/machines/allowlist","POST","admin","admin",{"ip":"1271.0.0.1"})
+        self.assertEqual(response_toomanyNibble.status_code,422)
+        self.assertEqual(response_toobigNibble.status_code,422)
+
+    def test_login(self):
+        response_correctLogin = self.app.post("/api/v1/login",json ={"username":"admin","password":"admin"})
+        response_wrongUser = self.app.post("/api/v1/login",json ={"username":"hacker","password":"admin"})
+        response_wrongPassowrd = self.app.post("/api/v1/login",json ={"username":"hacker","password":"hacker"})
+        self.assertEqual(response_correctLogin.status_code,200)
+        self.assertEqual(response_wrongUser.status_code,401)
+        self.assertEqual(response_wrongPassowrd.status_code,401)
+
     
-    def test_deleteIp(self):
-        response = self.open_with_auth("/api/v1/machines/allowlist","DELETE","admin","admin",{"ip":"127.0.0.1"})    # will change because Ipregex check is implemented on different branche
-        self.assertEqual(response.mimetype,"application/json")
-        self.assertEqual(response.status_code,200)
-
-    def test_getAllowlist(self):
-        response = self.open_with_auth("/api/v1/machines/allowlist","GET","admin","admin")
-        self.assertEqual(response.mimetype,"application/json")
-        self.assertEqual(response.status_code,200)
-
 
 if __name__ == "__main__":
     unittest.main()

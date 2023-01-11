@@ -8,8 +8,7 @@ import logging
 from functools import wraps
 import re
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
@@ -23,7 +22,6 @@ db = mongo.db
 users = {
     "admin": "admin"
 }
-
 
 def authentication(f):
     @wraps(f)
