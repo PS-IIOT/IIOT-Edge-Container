@@ -1,9 +1,5 @@
 // import { StatusMachine } from './StatusMachine';
-import { useState, useEffect } from 'react';
-import { ErrorlogResponse } from '../models/errorlog-response.model';
 import { MachineResponse } from '../models/machine-response.model';
-import { getOneMachine } from '../services/errorlog.service';
-import { getAllMachines } from '../services/machine.service';
 export interface CardProps {
     machineData: MachineResponse;
     // className?: string;
@@ -179,17 +175,14 @@ const CardTemperature = ({ machineData }: CardProps) => {
 };
 
 const CardFooter = ({ machineData }: CardProps) => {
-    const [machineError, setMachineError] = useState(machineData.errorlog);
-    useEffect(() => {
-        setMachineError(machineData.errorlog);
-    }, []);
+ 
     return (
         <div>
             {machineData.offline ? (
                 <div className="w-full h-7 bg-slate-400"></div>
             ) : (
                 <div>
-                    {machineError.length ? (
+                    {machineData.errorlog.length ? (
                         <div className="flex justify-center items-center w-full h-7 bg-red-500">
                             {' '}
                             <div className="flex justify-center items-center fill-yellow-400 drop-shadow-2xl w-6 h-6">
