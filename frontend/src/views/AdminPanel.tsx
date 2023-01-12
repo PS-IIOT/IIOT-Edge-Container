@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Admin } from './Admin';
-import { Errorlog } from './Errorlog';
+import { Admin } from '../components/Admin';
+import { Errorlog } from '../components/Errorlog';
 
 export const AdminPanel = () => {
     const navigate = useNavigate();

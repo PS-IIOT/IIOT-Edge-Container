@@ -229,7 +229,6 @@ def login():
                     content:
                         application/json:
                             schema: loginResponseSchema
-                    required: true
     """
     username = request.json['username']
     password = request.json['password']
