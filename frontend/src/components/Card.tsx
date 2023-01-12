@@ -177,13 +177,13 @@ const CardFooter = ({ machineData }: CardProps) => {
     return (
         <div>
             {machineData.offline ? (
-                <div className="w-full h-7 bg-slate-400"></div>
+                <div className="w-full h-8 bg-slate-400 rounded-b-md"></div>
             ) : (
                 <div>
                     {machineData.errorlog ? (
-                        <div className="flex justify-center items-center w-full h-7 bg-red-400">
+                        <div className="flex justify-center items-center w-full h-8 bg-red-500 rounded-b-md">
                             <button className="ml-2" onClick={handleOnclick}>
-                                <div className="flex justify-center items-center fill-white drop-shadow-2xl w-1 h-3 hover:fill-yellow-400 position relative bg-black mt-2">
+                                <div className="flex justify-center items-center fill-white drop-shadow-2xl w-1 h-3 hover:fill-yellow-400 position relative bg-slate-500 mt-3">
                                     <svg
                                         className="position absolute w-5 h-5 mb-1"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -193,12 +193,12 @@ const CardFooter = ({ machineData }: CardProps) => {
                                     </svg>
                                 </div>
                             </button>
-                            <div className="text-xs mb-4 text-slate-500 bg-white rounded-full h-3 w-3 flex justify-center items-center">
+                            <div className="text-xs mb-4 ml-1 text-slate-500 bg-white rounded-full h-3 w-3 flex justify-center items-center">
                                 {machineData.errorlog.length}
                             </div>
                         </div>
                     ) : (
-                        <div className="w-full h-7 bg-green-400"></div>
+                        <div className="w-full h-8 bg-green-400"></div>
                     )}
                 </div>
             )}
