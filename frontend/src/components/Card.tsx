@@ -180,7 +180,7 @@ const CardFooter = ({ machineData }: CardProps) => {
                 <div className="w-full h-8 bg-slate-400 rounded-b-md"></div>
             ) : (
                 <div>
-                    {machineData.errorlog ? (
+                    {machineData.errorlog.length ? (
                         <div className="flex justify-center items-center w-full h-8 bg-red-500 rounded-b-md">
                             <button className="ml-2" onClick={handleOnclick}>
                                 <div className="flex justify-center items-center fill-white drop-shadow-2xl w-1 h-3 hover:fill-yellow-400 position relative bg-slate-500 mt-3">

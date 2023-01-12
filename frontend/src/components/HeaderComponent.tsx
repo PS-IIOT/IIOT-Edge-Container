@@ -49,7 +49,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
             <div className="flex justify-around items-center">
                 <Link to="/ErrorlogUser">
                     <div>
-                        {allErrors ? (
+                        {allErrors.length ? (
                             <div className="mr-8 positon relative flex justify-start">
                                 <div className="flex justify-center items-center bg-black fill-yellow-400 drop-shadow-2xl w-2 h-5 position relative">
                                     <svg

@@ -17,7 +17,15 @@ const test = {
     uptime: 0,
     warning: false,
     offline: false,
-    errorlog: [1, 3],
+    errorlog: [
+        {
+            _id: {
+                $oid: '123ahuf124',
+            },
+            errormsg: 'TestError',
+            id: 1,
+        },
+    ],
 };
 export const User = () => {
     const [machines, setMachines] = useState<MachineResponse[]>();
