@@ -17,9 +17,9 @@ class Datahandler:
 
     def conversion(self, timestamp):
 
-        temp = self.que.popleft()
-        conv_json_object_rpc = self.data_converter.conversion_rpc(timestamp, temp)
-        conv_json_object_db = self.data_converter.conversion_db(timestamp, temp)
+        tmp = self.que.popleft()
+        conv_json_object_rpc = self.data_converter.conversion_rpc(timestamp, tmp)
+        conv_json_object_db = self.data_converter.conversion_db(timestamp, tmp)
         try:
             wwh_status = self.rpc.wwh_status()
             link_state = self.rpc.link_state()
@@ -37,5 +37,5 @@ class Datahandler:
             logging.debug(f"RPC Failed to send Data {e}")
         try:
             Database.replace("Machinedata", conv_json_object_db, {"serialnumber": conv_json_object_db["serialnumber"]})
-        except TypeError as tr:
-            logging.debug(f"{tr}")
+        except TypeError as te:
+            logging.debug(f"{te}")

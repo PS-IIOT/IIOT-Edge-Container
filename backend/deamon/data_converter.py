@@ -17,7 +17,7 @@ class Dataconverter:
             data['cycle'] = json_object['data'][8]
             data['ts'] = str(timestamp)
         except json.decoder.JSONDecodeError as er:
-                logging.debug(f"Empty Object cannot be parsed to JSON {er}")
+                logging.debug(f"Decoding JSON has failed {er}")
         return data
     
     def conversion_rpc(self, timestamp, data):
@@ -31,5 +31,5 @@ class Dataconverter:
             data['values'][0]['cycle'] = json_object['data'][8]
             data['values'][0]['ts'] = str(timestamp)
         except json.decoder.JSONDecodeError as er:
-                logging.debug(f"Empty Object cannot be parsed to JSON {er}")
+                logging.debug(f"Decoding JSON has failed {er}")
         return data

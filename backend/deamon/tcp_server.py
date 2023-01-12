@@ -37,7 +37,7 @@ class Tcpsocket:
                     Database.deleteOne("Errorlog", {"errorcode": 40, "machine": tmp['data'][0]})
             except jsonschema.ValidationError as error:
                 logging.debug(f"No valid Json: {error.message}")
-                Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Values of Machinesim {tmp['data'][0]}", "machine": tmp['data'][0]}, {"machine": tmp['data'][0], "errorcode": 40})
+                Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Output of Machine: {tmp['data'][0]}", "machine": tmp['data'][0]}, {"machine": tmp['data'][0], "errorcode": 40})
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Empty Object cannot be cast to JSON {er}")
             data_handler.handle_json(data, self.timestamp())
