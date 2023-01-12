@@ -59,8 +59,7 @@ class Tcpsocket:
                 if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
                     Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
                 print(f"Connected by {addr}")
-                thread = threading.Thread(
-                    target=self.handle_client, args=(conn, data_handler, addr))
+                thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))
                 thread.start()
             else:
                 print("Wrong Ip")
