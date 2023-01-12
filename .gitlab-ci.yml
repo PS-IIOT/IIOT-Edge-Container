@@ -10,6 +10,15 @@ backend:
         - cd backend
     script:
         - python -m unittest
+
+frontend:
+    stage: test
+    image: node:18-alpine
+    before_script:
+        - cd frontend
+        - npm install --silent
+    script:
+        - npm run validate
 # build_frontend_image:
 #     stage: build
 #     image: docker:20.10.22
