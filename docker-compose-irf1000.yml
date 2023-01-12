@@ -14,11 +14,11 @@ services:
 
   backend:
     image: adstec/priv:iiot-backend-arm32v7
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 3333:5000
+      - 5002:5000
       - 7002:7002
     env_file:
       - ./backend/.env.production
@@ -30,29 +30,25 @@ services:
     platform: linux/arm/v7
 
   mongodb:
-    image: webhippie/mongodb:latest-arm32v7
+    image: iondv/arm32-mongodb
     # image: adstec/priv:iiot-mongodb-arm32v7
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-      MONGO_INITDB_DATABASE: machineData
     ports:
-      - 27018:27017
+      - 27217:27017
     volumes:
       - mongodb_data:/data/db
     networks:
       - backend
 
-  machinesim:
-    image: adstec/priv:iiot-machine-sim-arm32v7
-    build:
-      context: ./machine-sim
-      dockerfile: Dockerfile
-    depends_on:
-      - backend
-    networks:
-      - backend
-    platform: linux/arm/v7
+  # machinesim:
+  #   image: adstec/priv:iiot-machine-sim-arm32v7
+  #   build:
+  #     context: ./machine-sim
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - backend
+  #   platform: linux/arm/v7
 
 volumes:
   mongodb_data:

@@ -12,10 +12,10 @@ def start():
         ip_allowlist = Database.findOne("Ip_whitelist",{})
         if(ip_allowlist == None):
             Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1"]})
-        machinData = list(Database.find("Machinedata",{}))
+        machinData = list(Database.find("machineData",{}))
         for machine in machinData:
             if(machine["offline"] == False):
-                Database.updateOne("Machinedata",{"$set":{"offline":True}},{"serialnumber":machine["serialnumber"]})
+                Database.updateOne("machineData",{"$set":{"offline":True}},{"serialnumber":machine["serialnumber"]})
     except Exception as e:
         logging.debug(f"{e}")
     sock = deamon.tcp_server.Tcpsocket()

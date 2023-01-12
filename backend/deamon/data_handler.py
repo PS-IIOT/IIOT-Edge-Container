@@ -36,6 +36,6 @@ class Datahandler:
         except Exception as e:
             logging.debug(f"RPC Failed to send Data {e}")
         try:
-            Database.replace("Machinedata", conv_json_object_db, {"serialnumber": conv_json_object_db["serialnumber"]})
-        except TypeError as te:
-            logging.debug(f"{te}")
+            Database.replace("machineData", conv_json_object_db,{"serialnumber":conv_json_object_db["serialnumber"]})
+        except TypeError:
+            None

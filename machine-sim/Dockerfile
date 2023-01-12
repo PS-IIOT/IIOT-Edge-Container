@@ -8,11 +8,11 @@ RUN apk add --no-cache tmux
 #to COPY the remote file at working directory in container
 COPY machine-sim.py ./app/
 
-COPY ./docker-entrypoint.sh /
+COPY ./docker-entrypoint.sh ./
 RUN chmod +x /docker-entrypoint.sh
 
 # ENTRYPOINT ["python3", "app/machine-sim.py"]
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT [ "sh", "docker-entrypoint.sh" ]
 # ENTRYPOINT tmux new-session -d -s sim python3 /app/machine-sim.py
 
 # COPY ./script.sh /

@@ -67,7 +67,7 @@ def getAllMachine():
                             schema: getAllMachinesSchema
     """
     machineList = []
-    cursor = list(db["Machinedata"].find({}))
+    cursor = list(db["machineData"].find({}))
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
         print(f"{machine}")

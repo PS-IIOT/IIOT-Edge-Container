@@ -38,7 +38,7 @@ class Tcpsocket:
                 logging.debug(f"Empty Object cannot be cast to JSON {er}")
             data_handler.handle_json(data, self.timestamp())
             if not data:
-                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {
+                Database.updateOne("machineData", {"$set": {"offline": True}}, {
                                    "serialnumber": tmp['data'][0]})
                 print(
                     f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
