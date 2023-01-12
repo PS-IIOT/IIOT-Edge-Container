@@ -49,6 +49,12 @@
                 "@typescript-eslint/array-type": [
                     "error",
                     { "default": "array-simple" }
+                ],
+                "@typescript-eslint/no-misused-promises": [
+                    "error",
+                    {
+                        "checksVoidReturn": false
+                    }
                 ]
             }
         }

@@ -3,8 +3,13 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/login.service';
 
+type UserData = {
+    username: string;
+    password: string;
+};
+
 export const Login = () => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit } = useForm<UserData>();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,7 +18,7 @@ export const Login = () => {
         }
     }, []);
 
-    const onSubmit = async (formData: unknown) => {
+    const onSubmit = async (formData: UserData) => {
         const userCredentials = {
             username: formData.username,
             password: formData.password,

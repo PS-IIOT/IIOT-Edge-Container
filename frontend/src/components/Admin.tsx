@@ -81,7 +81,9 @@ const DeleteIp = ({ delIP, setAllowList }: deleteIP) => {
             data.ip = delIP;
             console.log(data);
             const newAllowlist = await deleteIp(data);
-            setAllowList(newAllowlist);
+            if (newAllowlist) {
+                setAllowList(newAllowlist);
+            }
         }
     };
     return (
@@ -102,7 +104,9 @@ const AddIp = ({ setAllowList }: AddIpProps) => {
     const { register, handleSubmit } = useForm<AllowlistRequest>();
     const onSubmit = async (data: AllowlistRequest) => {
         const newAllowlist = await insertIP(data);
-        setAllowList(newAllowlist);
+        if (newAllowlist) {
+            setAllowList(newAllowlist);
+        }
     };
 
     return (
