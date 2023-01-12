@@ -20,7 +20,7 @@ class Dataconverter:
                 logging.debug(f"Decoding JSON has failed {er}")
         return data
     
-    def conversion_rpc(self, timestamp, data):
+    def conversion_rpc(self, timestamp, data,):
         try:    
             json_object = json.loads(data)
             data = {"measurement": str,"tags": {"serialnumber": str},"values": [{"ts": str,"uptime": int,"temp": float,"cycle": int}]}

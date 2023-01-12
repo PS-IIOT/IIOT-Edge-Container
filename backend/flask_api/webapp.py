@@ -135,7 +135,7 @@ def getAllowlist():
                         application/json:
                             schema: noneSchema
     """
-    allowList = db["Ip_whitelist"].find_one({})
+    allowList = db["Ip_allowlist"].find_one({})
     if (allowList == None):
         return Response(json_util.dumps({}), mimetype='application/json', status=404)
     return Response(json_util.dumps(allowList), mimetype='application/json', status=200)
@@ -166,7 +166,7 @@ def insertIp():
     """
     ip = request.json['ip']
     if (re.search(IPregex, ip)):
-        newAllowlist = db["Ip_whitelist"].find_one_and_update(
+        newAllowlist = db["Ip_allowlist"].find_one_and_update(
             {}, {"$push": {"Ip_Adresses": ip}}, upsert=True, return_document=True)
         return Response(json_util.dumps(newAllowlist), mimetype='application/json', status=200)
     # code 422 unprocessable entity
@@ -193,12 +193,12 @@ def deleteIp():
                             schema: allowlistSchema
     """
     ip = request.json['ip']
-    allowList = db["Ip_whitelist"].find_one({})
+    allowList = db["Ip_allowlist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
         return Response(json_util.dumps(allowList), mimetype='application/json', status=404)
     newList.remove(ip)
-    updatedList = db["Ip_whitelist"].find_one_and_update(
+    updatedList = db["Ip_allowlist"].find_one_and_update(
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
     return Response(json_util.dumps(updatedList), mimetype='application/json', status=200)
