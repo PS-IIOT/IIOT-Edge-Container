@@ -17,6 +17,7 @@ const test = {
     uptime: 0,
     warning: false,
     offline: false,
+    errorlog: [1, 3],
 };
 export const User = () => {
     const [machines, setMachines] = useState<MachineResponse[]>();

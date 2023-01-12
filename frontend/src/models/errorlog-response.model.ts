@@ -15,5 +15,5 @@ export type ErrorlogResponse = {
     };
     errormsg: string;
     id: number;
-    machine: string;
+    machine?: string;
 };
