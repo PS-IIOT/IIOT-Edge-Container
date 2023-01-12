@@ -5,8 +5,8 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { User } from './views/User';
 import { AdminPanel } from './views/AdminPanel';
-import { Errorlog } from './views/Errorlog';
-import { Login } from './components/Login';
+import { ErrorLogUser } from './views/ErrorlogUser';
+import { Login } from './views/Login';
 
 const router = createBrowserRouter([
     {
@@ -26,8 +26,8 @@ const router = createBrowserRouter([
                 element: <AdminPanel />,
             },
             {
-                path: '/errorlog',
-                element: <Errorlog />,
+                path: '/ErrorlogUser',
+                element: <ErrorLogUser />,
             },
             {
                 path: '*',
