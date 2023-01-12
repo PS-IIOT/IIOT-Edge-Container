@@ -42,7 +42,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
             <div className="w-auto h-auto m-5">
                 <span className="font-bold text-4xl italic text-slate-400 drop-shadow-2xl">
                     <Link to="/">
-                        <span>IRF 1000</span>
+                        <span className="hover:text-slate-500">IRF 1000</span>
                     </Link>
                 </span>
             </div>
@@ -53,7 +53,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
                             <div className="mr-8 positon relative flex justify-start">
                                 <div className="flex justify-center items-center bg-black fill-yellow-400 drop-shadow-2xl w-2 h-5 position relative">
                                     <svg
-                                        className="position absolute w-8"
+                                        className="position absolute w-8 hover:fill-slate-400"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 512 512"
                                     >
@@ -67,6 +67,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
                         ) : (
                             <div className="m-5 flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
                                 <svg
+                                    className="hover:text-slate-500"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"
                                 >
@@ -80,6 +81,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
                 <Link to="/Login">
                     <div className="flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
                         <svg
+                            className="hover:fill-slate-500"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512"
                         >

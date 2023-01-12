@@ -1,4 +1,4 @@
-// import { StatusMachine } from './StatusMachine';
+import { useNavigate } from 'react-router-dom';
 import { MachineResponse } from '../models/machine-response.model';
 export interface CardProps {
     machineData: MachineResponse;
@@ -170,6 +170,10 @@ const CardTemperature = ({ machineData }: CardProps) => {
 };
 
 const CardFooter = ({ machineData }: CardProps) => {
+    const navigate = useNavigate();
+    const handleOnclick = () => {
+        navigate('/ErrorlogUser');
+    };
     return (
         <div>
             {machineData.offline ? (
@@ -177,16 +181,19 @@ const CardFooter = ({ machineData }: CardProps) => {
             ) : (
                 <div>
                     {machineData.errorlog ? (
-                        <div className="flex justify-center items-center w-full h-7 bg-red-500">
-                            <div className="flex justify-center items-center fill-white drop-shadow-2xl w-6 h-6">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 512 512"
-                                >
-                                    <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z" />
-                                </svg>
-                            </div>
-                            <div className="text-xs mb-2 text-slate-100">
+                        <div className="flex justify-center items-center w-full h-7 bg-red-400">
+                            <button className="ml-2" onClick={handleOnclick}>
+                                <div className="flex justify-center items-center fill-white drop-shadow-2xl w-1 h-3 hover:fill-yellow-400 position relative bg-black mt-2">
+                                    <svg
+                                        className="position absolute w-5 h-5 mb-1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <div className="text-xs mb-4 text-slate-500 bg-white rounded-full h-3 w-3 flex justify-center items-center">
                                 {machineData.errorlog.length}
                             </div>
                         </div>
