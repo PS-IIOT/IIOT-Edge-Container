@@ -1,3 +1,5 @@
+import { ErrorlogResponse } from './errorlog-response.model';
+
 export type MachineResponse = {
     _id: {
         $oid: string;
@@ -10,5 +12,5 @@ export type MachineResponse = {
     uptime: number;
     warning: boolean;
     offline: boolean;
-    errorlog: [];
+    errorlog: ErrorlogResponse[];
 };
