@@ -1,0 +1,33 @@
+stages:
+    - test
+    - build
+
+backend:
+    stage: test
+    image: python:latest
+    before_script:
+        - pip install -r backend/requirements.txt
+        - cd backend
+    script:
+        - python -m unittest
+
+frontend:
+    stage: test
+    image: node:18-alpine
+    before_script:
+        - cd frontend
+        - npm install --silent
+    script:
+        - npm run validate
+# build_frontend_image:
+#     stage: build
+#     image: docker:20.10.22
+#     services:
+#         - docker:20.10.22-dind
+#     # variables:
+#     #     DOCKER_TLS_CERTDIR: '/certs'
+#     before_script:
+#         - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD https://index.docker.io/v1/
+#     script:
+#         - docker build -t adstec/priv:iiot-frontend ./frontend/Dockerfile-dev
+#         - docker push adstec/priv:iiot-frontend

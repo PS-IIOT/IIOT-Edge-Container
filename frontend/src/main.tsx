@@ -5,8 +5,8 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { User } from './views/User';
 import { AdminPanel } from './views/AdminPanel';
-import { ErrorLogUser } from './views/ErrorlogUser';
 import { Login } from './views/Login';
+import { ErrorLogUser } from './views/ErrorLogUser';
 
 const router = createBrowserRouter([
     {
