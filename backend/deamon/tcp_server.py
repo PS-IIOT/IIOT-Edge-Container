@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 class Tcpsocket:
-    def __init__(self, ip='0.0.0.0', port=7002) -> None:
+    def __init__(self, ip="0.0.0.0", port=7002) -> None:
         self.HOST = ip
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,32 +40,54 @@ class Tcpsocket:
             if not data:
                 Database.updateOne("machineData", {"$set": {"offline": True}}, {
                                    "serialnumber": tmp['data'][0]})
-                print(
-                    f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
+                logging.debug(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
                 conn.close()
                 break
 
     def listen(self, data_handler) -> None:
         self.server.listen()
+        logging.debug(f"Server is listening on for TCP-Connections {self.HOST}:{self.PORT}")
         while True:
             conn, addr = self.server.accept()
-            cursor = Database.find_ip("Ip_whitelist")
-            ip_adresses = cursor["Ip_Adresses"]
-            if addr[0] in ip_adresses:
-                if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
-                    Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
-                print(f"Connected by {addr}")
+            logging.debug(f"Machine with IP-Adress: {addr} trys to connect!")
+            
+            whitelist = Database.find_ip("Ip_whitelist")
+            
+            if addr[0] in whitelist['Ip_Adresses']:
+                logging.debug(f"New Machine Connected by IP-Address: {addr}")
                 thread = threading.Thread(
                     target=self.handle_client, args=(conn, data_handler, addr))
                 thread.start()
             else:
-                print("Wrong Ip")
-                Database.replace("Errorlog", {"errorcode": 42, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
-                "machine": data['data'][0]}, {"machine": data['data'][0], "errorcode": 42})
+                logging.debug("IP-Address not in allowlist, Connection refused")
                 conn.shutdown(socket.SHUT_RDWR)
                 conn.close()
 
+            
+
+    # def listen(self, data_handler) -> None:
+    #     self.server.listen()
+    #     print(f"Server is listening on for TCP-Connections {self.HOST}:{self.PORT}")
+    #     while True:
+    #         conn, addr = self.server.accept()
+    #         print(f'DEBUG Address: {addr} trys to connect!')
+    #         cursor = Database.find_ip("Ip_whitelist")
+    #         if addr[0] in ip_adresses:
+    #             if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
+    #                 Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
+    #             print(f"Connected by {addr}")
+    #             thread = threading.Thread(
+    #                 target=self.handle_client, args=(conn, data_handler, addr))
+    #             thread.start()
+    #         else:
+    #             print("Wrong Ip")
+    #             # Database.replace("Errorlog", {"errorcode": 42, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
+    #             # "machine": data['data'][0] }, {"machine": data['data'][0], "errorcode": 42})
+    #             conn.shutdown(socket.SHUT_RDWR)
+    #             conn.close()
+
     def timestamp(self):
+
         dt = datetime.now()
         ts = str(dt.isoformat('T'))
         tu = ts[:len(str(ts))-3]+'+01:00'

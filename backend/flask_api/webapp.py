@@ -70,10 +70,10 @@ def getAllMachine():
     cursor = list(db["machineData"].find({}))
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
-        print(f"{machine}")
+        # print(f"{machine}")
         machine["errorlog"] = []
         for error in cursor_errorlog:
-            print(f"{error}")
+            # print(f"{error}")
             if machine["serialnumber"] == error["machine"]:
                 machine["errorlog"].append(error)
         machineList.append(machine)
@@ -251,4 +251,4 @@ def create_app():
             # app.run(host="0.0.0.0", port=5001)
             app.run(host="0.0.0.0", port=5000)
     except Exception as e:
-        logging.debug(f"{e}")
+        logging.debug(f"DEBUG TEST IST ES HIER?{e}")

@@ -17,6 +17,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - 5002:5000
       - 7002:7002
@@ -30,8 +32,7 @@ services:
     platform: linux/arm/v7
 
   mongodb:
-    image: iondv/arm32-mongodb
-    # image: adstec/priv:iiot-mongodb-arm32v7
+    image: iondv/arm32-mongodb:latest
     ports:
       - 27217:27017
     volumes:
