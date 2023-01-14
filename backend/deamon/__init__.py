@@ -9,9 +9,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(leveln
 def start():
     Database.initialize()
     try:    
-        ip_allowlist = Database.findOne("Ip_whitelist",{})
+        ip_allowlist = Database.findOne("Ip_allowlist",{})
         if(ip_allowlist == None):
-            Database.insertOne("Ip_whitelist",{"Ip_Adresses": ["127.0.0.1"]})
+            Database.insertOne("Ip_allowlist",{"Ip_Adresses": ["127.0.0.1"]})
         machinData = list(Database.find("Machinedata",{}))
         for machine in machinData:
             if(machine["offline"] == False):

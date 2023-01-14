@@ -78,8 +78,8 @@ class MachineSim:
 
         if not err:
             self.cycle = self.cycle + 1
-        a = {"version": "adstec-machine-sim-v0",
-             "datei": [args.serial, 4, False, False, warn, err, self.temp, int(self.uptime), self.cycle]}
+        a = {"versio": "adstec-machine-sim-v0",
+             "data": [args.serial, 4, False, False, warn, err, self.temp, int(self.uptime), self.cycle]}
         self.last_data = a
 
         time.sleep(self.speed)
