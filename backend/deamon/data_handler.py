@@ -11,15 +11,15 @@ class Datahandler:
         self.rpc = rpc
         self.data_converter = Dataconverter()
 
-    def handle_json(self, data, timestamp):
+    def handle_json(self, data, timestamp)->None:
         self.que.append(data)
         self.conversion(timestamp)
 
-    def conversion(self, timestamp):
+    def conversion(self, timestamp)->None:
 
-        tmp = self.que.popleft()
-        conv_json_object_rpc = self.data_converter.conversion_rpc(timestamp, tmp)
-        conv_json_object_db = self.data_converter.conversion_db(timestamp, tmp)
+        data_dict = self.que.popleft()
+        data_dict_rpc = self.data_converter.conversion_rpc(timestamp, data_dict)
+        data_dict_db = self.data_converter.conversion_db(timestamp, data_dict)
         try:
             wwh_status = self.rpc.wwh_status()
             link_state = self.rpc.link_state()
@@ -36,6 +36,6 @@ class Datahandler:
         except Exception as e:
             logging.debug(f"RPC Failed to send Data {e}")
         try:
-            Database.replace("Machinedata", conv_json_object_db,{"serialnumber":conv_json_object_db["serialnumber"]})
+            Database.replace("Machinedata", data_dict_db,{"serialnumber":data_dict_db["serialnumber"]})
         except TypeError:
             None

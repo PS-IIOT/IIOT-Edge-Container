@@ -22,14 +22,18 @@ IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][
 app = Flask(__name__)
 CORS(app)
 
-dotenv_path = Path('backend/.env')
-load_dotenv(dotenv_path)
+""" dotenv_path = Path('backend/.env')
+load_dotenv(dotenv_path) """
+app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
+""" mongo = PyMongo(app)
+db = mongo.db
+
 
 if (os.getenv('MONGO_URI') == None):
     app.config["MONGO_URI"] = 'mongodb://test:1234' # for tests
 else:
     app.config["MONGO_URI"] = os.getenv('MONGO_URI')
-
+ """
 mongo = PyMongo(app)
 db = mongo.db
 

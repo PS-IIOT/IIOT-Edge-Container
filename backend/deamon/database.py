@@ -5,9 +5,10 @@ import os
 
 
 class Database(object):
-    dotenv_path = Path('backend/.env')
+    """ dotenv_path = Path('backend/.env')
     load_dotenv(dotenv_path=dotenv_path)
-    URI = os.getenv('MONGO_URI')
+    URI = os.getenv('MONGO_URI') """
+    URI = 'mongodb://root:rootpassword@localhost:27017'
     DATABASE = None
     CLIENT = None
 
