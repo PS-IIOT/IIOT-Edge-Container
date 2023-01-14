@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   frontend:
+    image: adstec/priv:iiot-frontend-arm32v7
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -11,16 +12,18 @@ services:
       - frontend
     depends_on:
       - backend
+    platform: linux/arm/v7
 
   backend:
+    image: adstec/priv:iiot-backend-arm32v7
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - 5000:5000
-      - 7002:7002
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    ports:
+      - 5002:5000
+      - 7002:7002
     env_file:
       - ./backend/.env.production
     depends_on:
@@ -28,13 +31,10 @@ services:
     networks:
       - frontend
       - backend
+    platform: linux/arm/v7
 
   mongodb:
-    image: mongo:3.2
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: root
-    #   MONGO_INITDB_ROOT_PASSWORD: rootpassword
-    #   MONGO_INITDB_DATABASE: machineData
+    image: iondv/arm32-mongodb:latest
     ports:
       - 27217:27017
     volumes:
@@ -43,6 +43,7 @@ services:
       - backend
 
   # machinesim:
+  #   image: adstec/priv:iiot-machine-sim-arm32v7
   #   build:
   #     context: ./machine-sim
   #     dockerfile: Dockerfile
@@ -50,6 +51,7 @@ services:
   #     - backend
   #   networks:
   #     - backend
+  #   platform: linux/arm/v7
 
 volumes:
   mongodb_data:

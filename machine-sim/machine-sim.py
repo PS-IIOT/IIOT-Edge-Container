@@ -21,7 +21,7 @@ import json
 
 
 class MachineSim:
-    def __init__(self, ip="172.17.0.3", port=7002, speed=10):
+    def __init__(self, ip="172.0.0.1", port=7002, speed=10):
         self.uptime = 0
         self.serverip = ip
         self.serverport = port

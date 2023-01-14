@@ -198,7 +198,7 @@ const CardFooter = ({ machineData }: CardProps) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="w-full h-8 bg-green-400"></div>
+                        <div className="w-full h-8 bg-green-400 rounded-b-md"></div>
                     )}
                 </div>
             )}
