@@ -4,9 +4,6 @@ import { useInterval } from '../hooks/useInterval';
 import { ErrorlogResponse } from '../models/errorlog-response.model';
 import { getAllErrors } from '../services/errorlog.service';
 
-interface statusHeaderProps {
-    statusH: boolean;
-}
 const test = [
     {
         _id: {
@@ -26,8 +23,9 @@ const test = [
     },
 ];
 
-export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
+export const HeaderComponent = () => {
     const [allErrors, setallErrors] = useState<ErrorlogResponse[]>(test);
+    const [wwhStatus, setWwhStatus] = useState<boolean>(true);
 
     useEffect(() => {
         void getAllErrors().then((allErrors) => setallErrors(allErrors));
@@ -36,6 +34,9 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
     useInterval(async () => {
         const data = await getAllErrors();
         setallErrors(data);
+        if (data.find((element) => element.id === 41)) {
+            setWwhStatus(false);
+        }
     }, 10000);
     return (
         <div className="flex justify-between items-center w-11/12 mx-auto my-3 rounded-xl drop-shadow-xl shadow-md shadow-grey h-20 bg-slate-200">
@@ -92,7 +93,7 @@ export const HeaderComponent = ({ statusH }: statusHeaderProps) => {
 
                 <div
                     className={
-                        statusH
+                        wwhStatus
                             ? 'flex justify-center items-center bg-ColorStatusConnectionOnline w-16 h-16 m-5 rounded-3xl'
                             : 'flex justify-center items-center bg-ColorStatusConnectionOffline w-16 h-16 m-5 rounded-3xl'
                     }
