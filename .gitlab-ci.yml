@@ -21,6 +21,8 @@ stages:
 
 build_frontend_image_arm32v7:
     stage: build_arm32v7
+    only:
+        - develop
     image: docker:20.10.22
     services:
         - docker:20.10.22-dind
@@ -32,6 +34,8 @@ build_frontend_image_arm32v7:
 
 build_backend_image_arm32v7:
     stage: build_arm32v7
+    only:
+        - develop
     image: docker:20.10.22
     services:
         - docker:20.10.22-dind
