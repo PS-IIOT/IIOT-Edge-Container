@@ -13,6 +13,7 @@ export const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = 'Login';
         if (sessionStorage.getItem('username') != null) {
             navigate('/AdminPanel');
         }

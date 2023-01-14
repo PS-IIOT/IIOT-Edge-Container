@@ -10,21 +10,24 @@ const test = {
     },
     cycle: 0,
     error: false,
+    // error: true,
     serialnumber: 'Testmachine',
 
-    temp: 0,
+    temp: 50,
     ts: '2022-11-28T20:14:05.077Z',
     uptime: 0,
     warning: false,
+    // warning: true,
     offline: false,
+    // offline: true,
     errorlog: [
-        {
-            _id: {
-                $oid: '123ahuf124',
-            },
-            errormsg: 'TestError',
-            id: 1,
-        },
+        // {
+        //     _id: {
+        //         $oid: '123ahuf124',
+        //     },
+        //     errormsg: 'TestError',
+        //     id: 1,
+        // },
     ],
 };
 export const User = () => {
