@@ -1,33 +1,42 @@
 stages:
     - test
-    - build
-
-backend:
-    stage: test
-    image: python:latest
-    before_script:
-        - pip install -r backend/requirements.txt
-        - cd backend
-    script:
-        - python -m unittest
-
-frontend:
-    stage: test
-    image: node:18-alpine
-    before_script:
-        - cd frontend
-        - npm install --silent
-    script:
-        - npm run validate
-# build_frontend_image:
-#     stage: build
-#     image: docker:20.10.22
-#     services:
-#         - docker:20.10.22-dind
-#     # variables:
-#     #     DOCKER_TLS_CERTDIR: '/certs'
+    - build_arm32v7
+# backend:
+#     stage: test
+#     image: python:latest
 #     before_script:
-#         - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD https://index.docker.io/v1/
+#         - pip install -r backend/requirements.txt
+#         - cd backend
 #     script:
-#         - docker build -t adstec/priv:iiot-frontend ./frontend/Dockerfile-dev
-#         - docker push adstec/priv:iiot-frontend
+#         - python -m unittest
+
+# frontend:
+#     stage: test
+#     image: node:18-alpine
+#     before_script:
+#         - cd frontend
+#         - npm install --silent
+#     script:
+#         - npm run validate
+
+build_frontend_image_arm32v7:
+    stage: build_arm32v7
+    image: docker:20.10.22
+    services:
+        - docker:20.10.22-dind
+    before_script:
+        - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD docker.io
+    script:
+        - docker build -t adstec/priv:iiot-frontend-arm32v7 --platform linux/arm/v7 frontend
+        - docker push adstec/priv:iiot-frontend-arm32v7
+
+build_backend_image_arm32v7:
+    stage: build_arm32v7
+    image: docker:20.10.22
+    services:
+        - docker:20.10.22-dind
+    before_script:
+        - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD docker.io
+    script:
+        - docker build -t adstec/priv:iiot-backend-arm32v7 --platform linux/arm/v7 backend
+        - docker push adstec/priv:iiot-backend-arm32v7
