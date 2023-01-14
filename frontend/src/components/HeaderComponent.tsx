@@ -10,21 +10,21 @@ const test = [
             $oid: 'test1',
         },
         errormsg: 'testError',
-        id: 1,
+        id: 41,
         machine: 'test',
     },
-    {
-        _id: {
-            $oid: 'test2',
-        },
-        errormsg: 'testError',
-        id: 1,
-        machine: 'test',
-    },
+    // {
+    //     _id: {
+    //         $oid: 'test2',
+    //     },
+    //     errormsg: 'testError',
+    //     id: 1,
+    //     machine: 'test',
+    // },
 ];
 
 export const HeaderComponent = () => {
-    const [allErrors, setallErrors] = useState<ErrorlogResponse[]>(test);
+    const [allErrors, setallErrors] = useState<ErrorlogResponse[]>([]);
     const [wwhStatus, setWwhStatus] = useState<boolean>(true);
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export const HeaderComponent = () => {
                             <div className="mr-8 positon relative flex justify-start">
                                 <div className="flex justify-center items-center bg-black fill-yellow-400 drop-shadow-2xl w-2 h-5 position relative">
                                     <svg
-                                        className="position absolute w-8 hover:fill-slate-400"
+                                        className="position absolute w-8 hover:fill-slate-500"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 512 512"
                                     >
@@ -68,7 +68,7 @@ export const HeaderComponent = () => {
                         ) : (
                             <div className="m-5 flex justify-center items-center fill-slate-400 drop-shadow-2xl w-8 h-8">
                                 <svg
-                                    className="hover:text-slate-500"
+                                    className="hover:fill-slate-500"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"
                                 >
