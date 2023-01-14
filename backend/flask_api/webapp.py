@@ -24,8 +24,12 @@ CORS(app)
 
 dotenv_path = Path('backend/.env')
 load_dotenv(dotenv_path)
-app.config["MONGO_URI"] = os.getenv('MONGO_URI')
-# app.config["MONGO_URI"] = 'mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin'
+
+if (os.getenv('MONGO_URI') == None):
+    app.config["MONGO_URI"] = 'mongodb://test:1234' # for tests
+else:
+    app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+
 mongo = PyMongo(app)
 db = mongo.db
 
@@ -67,7 +71,7 @@ def getAllMachine():
                             schema: getAllMachinesSchema
     """
     machineList = []
-    cursor = list(db["machineData"].find({}))
+    cursor = list(db["Machinedata"].find({}))
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
         # print(f"{machine}")
@@ -251,4 +255,4 @@ def create_app():
             # app.run(host="0.0.0.0", port=5001)
             app.run(host="0.0.0.0", port=5000)
     except Exception as e:
-        logging.debug(f"DEBUG TEST IST ES HIER?{e}")
+        logging.debug(f"{e}")
