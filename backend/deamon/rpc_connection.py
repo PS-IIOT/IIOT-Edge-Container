@@ -1,7 +1,9 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
 import requests
+from dotenv import load_dotenv
+
 
 class Rpcconnection:
     def __init__(self):
@@ -50,13 +52,13 @@ class Rpcconnection:
     def link_state(self):
         if not self.sid:
             self.session_create()
+        requestData = {"function": "link_state", "parameters": ["eth1", ""]}
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, requestData]}
         push_json["id"] = self.count
         self.increment()
         push_json["params"][0] = self.sid
         push_json["params"][1] = "status"
         push_json["params"][2] = "get"
-        requestData = {"function": "link_state", "parameters": ["eth1", ""]}
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
         return push_response

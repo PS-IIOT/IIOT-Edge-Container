@@ -1,7 +1,7 @@
-from collections import deque
 import json
-import os
 import logging
+import os
+from collections import deque
 
 logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 class Dataconverter:

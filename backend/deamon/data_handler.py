@@ -1,7 +1,10 @@
-from collections import deque
-from deamon.data_converter import Dataconverter
-from .database import Database
 import logging
+from collections import deque
+
+from deamon.data_converter import Dataconverter
+
+from .database import Database
+
 logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 
