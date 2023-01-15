@@ -4,7 +4,7 @@ from pathlib import Path
 import requests
 
 class Rpcconnection:
-    def __init__(self):
+    def __init__(self)->None:
         dotenv_path = Path('backend\.env')
         load_dotenv(dotenv_path=dotenv_path)
         self.HOST = os.getenv('RPC_URL')
@@ -14,10 +14,10 @@ class Rpcconnection:
         self.count = 1
         self.error = {}
 
-    def increment(self):
+    def increment(self)->None:
         self.count +=1
 
-    def session_create(self):
+    def session_create(self)->None:
         login_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {"user": str,"password": str}]}
         login_json["id"] = self.count
         self.increment()
@@ -31,7 +31,7 @@ class Rpcconnection:
         self.sid = json_response["result"][1]["sid"]
 
 
-    def blxpush_push(self, push_data):
+    def blxpush_push(self, push_data:dict)->None:
         if not self.sid:
             self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, push_data]}
@@ -47,7 +47,7 @@ class Rpcconnection:
             self.sid = None
             self.blxpush_push(push_data)
 
-    def link_state(self):
+    def link_state(self)->dict:
         if not self.sid:
             self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, requestData]}
@@ -61,7 +61,7 @@ class Rpcconnection:
         push_response = push.json()
         return push_response
 
-    def wwh_status(self):
+    def wwh_status(self)->dict:
         if not self.sid:
             self.session_create()
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, {}]}
@@ -74,5 +74,5 @@ class Rpcconnection:
         push_response = push.json()
         return push_response
 
-    def send_data(self, converted_data):
+    def send_data(self, converted_data)->None:
         self.blxpush_push(converted_data)

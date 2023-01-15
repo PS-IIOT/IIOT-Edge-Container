@@ -11,12 +11,11 @@ class Datahandler:
         self.rpc = rpc
         self.data_converter = Dataconverter()
 
-    def handle_json(self, data, timestamp)->None:
+    def handle_json(self, data:dict, timestamp:str)->None:
         self.que.append(data)
         self.conversion(timestamp)
 
-    def conversion(self, timestamp)->None:
-
+    def conversion(self, timestamp:str)->None:
         data_dict = self.que.popleft()
         data_dict_rpc = self.data_converter.conversion_rpc(timestamp, data_dict)
         data_dict_db = self.data_converter.conversion_db(timestamp, data_dict)
@@ -24,7 +23,7 @@ class Datahandler:
             wwh_status = self.rpc.wwh_status()
             link_state = self.rpc.link_state()
             if (link_state["result"][1]["link_state"] == "no"):
-                Database.replace("Errorlog", {"id": 42, "link_state": "Linkstate offline, check ETH Port 1"}, {"id": 42})
+                Database.replace("Errorlog", {"id": 42, "link_state": "Linkstate offline, WAN port"}, {"id": 42})
             else:
                 Database.deleteOne("Errorlog", {"id": 42})
                 

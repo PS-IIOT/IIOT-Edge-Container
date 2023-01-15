@@ -27,7 +27,9 @@ class Tcpsocket:
                     Database.deleteOne("Errorlog", {"errorcode": 40, "machine": data_dict ['data'][0]})
             except jsonschema.ValidationError as error:
                 logging.debug(f"No valid Json: {error.message}")
-                Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Output of Machine: {data_dict ['data'][0]}", "machine": data_dict ['data'][0]}, {"machine": data_dict ['data'][0], "errorcode": 40})
+                Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Output of Machine: {data_dict ['data'][0]}", 
+                "machine": data_dict ['data'][0]}, 
+                {"machine": data_dict ['data'][0], "errorcode": 40})
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Faild to decode JSON {er}")
             data_handler.handle_json(data_dict , self.timestamp())
@@ -46,7 +48,7 @@ class Tcpsocket:
             logging.debug(json_string)
             data_dict = json.loads(json_string)
             data_keys = list(data_dict.keys())
-            cursor = Database.find_ip("Ip_allowlist")
+            cursor = Database.findOne("Ip_allowlist")
             ip_adresses = cursor["Ip_Adresses"]
             logging.debug(f"Machine with IP-Address: {addr[0]} wants to connected. Checking if IP-Address is in allowlist!")
             if "data" in data_keys:
@@ -54,7 +56,7 @@ class Tcpsocket:
                     if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data_dict['data'][0]}) > 0:
                         Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data_dict['data'][0]})
                     logging.debug(f"Machine with ip: {addr[0]} connected")
-                    thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))
+                    thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))           #creating a new Thread that handles the connected tpc client
                     thread.start()
                 else:
                     logging.debug(f"Machine with ip: {addr[0]} not in allowlist, connnection rejected")
@@ -69,5 +71,5 @@ class Tcpsocket:
 
     def timestamp(self)-> str:
         ts_isoT = str(datetime.now().isoformat('T'))
-        ts = ts_isoT [:len(ts_isoT )-3]+'+01:00'
-        return ts
+        ts_isoT_CET = ts_isoT [:len(ts_isoT )-3]+'+01:00'
+        return ts_isoT_CET
