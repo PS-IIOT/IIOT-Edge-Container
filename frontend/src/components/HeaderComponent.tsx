@@ -94,8 +94,8 @@ export const HeaderComponent = () => {
                 <div
                     className={
                         wwhStatus
-                            ? 'flex justify-center items-center bg-ColorStatusConnectionOnline w-14 h-14 m-5 rounded-2xl'
-                            : 'flex justify-center items-center bg-ColorStatusConnectionOffline w-14 h-14 m-5 rounded-2xl'
+                            ? 'flex justify-center items-center bg-green-400 w-14 h-14 m-5 rounded-2xl'
+                            : 'flex justify-center items-center bg-red-400 w-14 h-14 m-5 rounded-2xl'
                     }
                 >
                     <FontAwesomeIcon
