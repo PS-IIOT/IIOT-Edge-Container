@@ -15,6 +15,7 @@ class Dataconverter:
         data_dict_db['cycle'] = data_dict['data'][8]
         data_dict_db['ts'] = timestamp
         return data_dict_db
+    
     def conversion_rpc(self, timestamp:str, data_dict:dict)-> dict:    
         data_dict_rpc = {"measurement": str,"tags": {"serialnumber": str},"values": [{"ts": str,"uptime": int,"temp": float,"cycle": int}]}
         data_dict_rpc["measurement"] = data_dict['data'][0]

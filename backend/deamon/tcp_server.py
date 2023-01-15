@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelna
 
 
 class Tcpsocket:
-    def __init__(self, ip='127.0.0.1', port=7002) -> None:
+    def __init__(self, ip='0.0.0.0', port=7002) -> None:
         self.HOST = ip
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

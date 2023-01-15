@@ -31,7 +31,7 @@ class Datahandler:
                 Database.replace("Errorlog", {"id": 41, "wwh_status": "WWH Status "+ wwh_status["result"][1]["status"]["link"]+" check your WWH Connection"}, {"id": 41})
             else:
                 Database.deleteOne("Errorlog", {"id": 41})
-            #self.rpc.send_data(conv_json_object_rpc)
+            self.rpc.send_data(data_dict_rpc)
         except Exception as e:
             logging.debug(f"RPC Failed to send Data {e}")
         try:

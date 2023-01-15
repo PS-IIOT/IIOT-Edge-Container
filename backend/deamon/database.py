@@ -5,10 +5,10 @@ import os
 
 
 class Database(object):
-    """ dotenv_path = Path('backend/.env')
+    dotenv_path = Path('backend/.env')
     load_dotenv(dotenv_path=dotenv_path)
-    URI = os.getenv('MONGO_URI') """
-    URI = 'mongodb://root:rootpassword@localhost:27017'
+    URI = os.getenv('MONGO_URI')
+    #URI = 'mongodb://root:rootpassword@localhost:27017'
     DATABASE = None
     CLIENT = None
 
@@ -29,7 +29,7 @@ class Database(object):
     @staticmethod
     def listCollectionNames():
         return Database.DATABASE.list_collection_names()
-        
+
     @staticmethod
     def insertOne(collection, data):
         Database.DATABASE[collection].insert_one(data)
