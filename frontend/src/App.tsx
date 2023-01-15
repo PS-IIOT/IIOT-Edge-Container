@@ -1,7 +1,7 @@
-import { HeaderComponent } from './components/HeaderComponent';
-import { FooterComponent } from './components/FooterComponent';
-import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { FooterComponent } from './components/FooterComponent';
+import { HeaderComponent } from './components/HeaderComponent';
 
 export const App = () => {
     useEffect(() => {
@@ -9,9 +9,11 @@ export const App = () => {
     }, []);
 
     return (
-        <div className="flex flex-col w-full h-screen position relative bg-slate-300 overflow-auto">
+        <div className="flex flex-col w-full h-screen bg-slate-300 p-3">
             <HeaderComponent />
-            <Outlet />
+            <div className="h-full grow w-11/12 mx-auto overflow-hidden p-8">
+                <Outlet />
+            </div>
             <FooterComponent />
         </div>
     );

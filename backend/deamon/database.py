@@ -5,9 +5,9 @@ import os
 
 
 class Database(object):
-    # dotenv_path = Path('backend\.env')
-    # load_dotenv(dotenv_path=dotenv_path)
-    URI = 'mongodb://root:rootpassword@localhost:27017'
+    dotenv_path = Path('backend/.env')
+    load_dotenv(dotenv_path=dotenv_path)
+    URI = os.getenv('MONGO_URI')
     DATABASE = None
     CLIENT = None
 
@@ -17,13 +17,14 @@ class Database(object):
         Database.DATABASE = Database.CLIENT["machineData"]
 
     @staticmethod
-    def update(collection,data):
+    def update(collection, data):
         Database.DATABASE[collection].update({}, data)
-    
+
     @staticmethod
-    def replace(collection,data,dfilter={}):
-        Database.DATABASE[collection].replace_one(filter=dfilter, replacement=data, upsert=True)
-    
+    def replace(collection, data, dfilter={}):
+        Database.DATABASE[collection].replace_one(
+            filter=dfilter, replacement=data, upsert=True)
+
     @staticmethod
     def listCollectionNames():
         return Database.DATABASE.list_collection_names()
@@ -31,35 +32,31 @@ class Database(object):
     @staticmethod
     def find_ip(collection):
         return Database.DATABASE[collection].find_one()
-    
+
     @staticmethod
-    def insertOne(collection,data):
+    def insertOne(collection, data):
         Database.DATABASE[collection].insert_one(data)
 
     @staticmethod
-    def countDocument(collection,data):
+    def countDocument(collection, data):
         return Database.DATABASE[collection].count_documents(data)
 
     @staticmethod
-    def deleteOne(collection,data):
+    def deleteOne(collection, data):
         return Database.DATABASE[collection].delete_one(data)
 
     @staticmethod
-    def deleteMany(collection,data):
+    def deleteMany(collection, data):
         return Database.DATABASE[collection].delete_many(data)
 
     @staticmethod
-    def updateOne(collection,data,dfilter={}):
-        Database.DATABASE[collection].update_one(filter=dfilter,update=data)
+    def updateOne(collection, data, dfilter={}):
+        Database.DATABASE[collection].update_one(filter=dfilter, update=data)
 
     @staticmethod
-    def findOne(collection,data):
+    def findOne(collection, data):
         return Database.DATABASE[collection].find_one(data)
 
     @staticmethod
-    def find(collection,data):
+    def find(collection, data):
         return Database.DATABASE[collection].find(data)
-
-
-
-    

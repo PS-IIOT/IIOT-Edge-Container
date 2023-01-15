@@ -14,9 +14,13 @@ export const AdminPanel = () => {
     }, []);
 
     return (
-        <div className="h-5/6 flex flex-row flex-grow-0">
-            <Admin></Admin>
-            <Errorlog></Errorlog>
+        <div className="h-full flex gap-3">
+            <div className="h-full grow-[1]">
+                <Admin></Admin>
+            </div>
+            <div className="grow-[8]">
+                <Errorlog></Errorlog>
+            </div>
         </div>
     );
 };

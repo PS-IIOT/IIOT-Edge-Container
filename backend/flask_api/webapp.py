@@ -4,18 +4,32 @@ from flask_pymongo import PyMongo
 from bson.json_util import dumps, loads
 from bson import json_util
 from flask_cors import CORS
+from flask import request
+from flask import Response
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+import pymongo
 import logging
 from functools import wraps
 import re
 
-logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 IPregex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
 app = Flask(__name__)
 CORS(app)
 
-app.config["MONGO_URI"] = "mongodb://root:rootpassword@localhost:27017/machineData?authSource=admin"
+dotenv_path = Path('backend/.env')
+load_dotenv(dotenv_path)
+
+if (os.getenv('MONGO_URI') == None):
+    app.config["MONGO_URI"] = 'mongodb://test:1234' # for tests
+else:
+    app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+
 mongo = PyMongo(app)
 db = mongo.db
 
@@ -60,10 +74,10 @@ def getAllMachine():
     cursor = list(db["Machinedata"].find({}))
     cursor_errorlog = list(db["Errorlog"].find({}))
     for machine in cursor:
-        print(f"{machine}")
+        # print(f"{machine}")
         machine["errorlog"] = []
         for error in cursor_errorlog:
-            print(f"{error}")
+            # print(f"{error}")
             if machine["serialnumber"] == error["machine"]:
                 machine["errorlog"].append(error)
         machineList.append(machine)
@@ -135,7 +149,7 @@ def getAllowlist():
                         application/json:
                             schema: noneSchema
     """
-    allowList = db["Ip_whitelist"].find_one({})
+    allowList = db["Ip_allowlist"].find_one({})
     if (allowList == None):
         return Response(json_util.dumps({}), mimetype='application/json', status=404)
     return Response(json_util.dumps(allowList), mimetype='application/json', status=200)
@@ -166,7 +180,7 @@ def insertIp():
     """
     ip = request.json['ip']
     if (re.search(IPregex, ip)):
-        newAllowlist = db["Ip_whitelist"].find_one_and_update(
+        newAllowlist = db["Ip_allowlist"].find_one_and_update(
             {}, {"$push": {"Ip_Adresses": ip}}, upsert=True, return_document=True)
         return Response(json_util.dumps(newAllowlist), mimetype='application/json', status=200)
     # code 422 unprocessable entity
@@ -193,12 +207,12 @@ def deleteIp():
                             schema: allowlistSchema
     """
     ip = request.json['ip']
-    allowList = db["Ip_whitelist"].find_one({})
+    allowList = db["Ip_allowlist"].find_one({})
     newList = allowList["Ip_Adresses"]
     if (ip not in newList):
         return Response(json_util.dumps(allowList), mimetype='application/json', status=404)
     newList.remove(ip)
-    updatedList = db["Ip_whitelist"].find_one_and_update(
+    updatedList = db["Ip_allowlist"].find_one_and_update(
         {}, {"$set": {"Ip_Adresses": newList}}, return_document=True
     )
     return Response(json_util.dumps(updatedList), mimetype='application/json', status=200)
@@ -238,6 +252,7 @@ def login():
 def create_app():
     try:
         with app.app_context():
-            app.run()
+            # app.run(host="0.0.0.0", port=5001)
+            app.run(host="0.0.0.0", port=5000)
     except Exception as e:
         logging.debug(f"{e}")

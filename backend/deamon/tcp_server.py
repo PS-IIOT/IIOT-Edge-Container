@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelna
 
 
 class Tcpsocket:
-    def __init__(self, ip='127.0.0.1', port=7002) -> None:
+    def __init__(self, ip='0.0.0.0', port=7002) -> None:
         self.HOST = ip
         self.PORT = port
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,28 +43,38 @@ class Tcpsocket:
             data_handler.handle_json(data, self.timestamp())
             if not data:
                 Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": tmp['data'][0]})
-                print(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
+                logging.debug(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
                 conn.close()
                 break
 
     def listen(self, data_handler) -> None:
         self.server.listen()
+        logging.debug(f"Server is listening on {self.HOST}:{self.PORT} for incoming connections")
         while True:
             conn, addr = self.server.accept()
             tmp = conn.recv(1024)
             data = json.loads(tmp)
-            cursor = Database.find_ip("Ip_whitelist")
+            keysList = list(data.keys())
+            cursor = Database.find_ip("Ip_allowlist")
             ip_adresses = cursor["Ip_Adresses"]
-            if addr[0] in ip_adresses:
-                if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
-                    Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
-                print(f"Connected by {addr}")
-                thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))
-                thread.start()
+
+            logging.debug(f"Machine with IP-Address: {addr[0]} wants to connected. Checking if IP-Address is in allowlist!")
+
+            if "data" in keysList:
+                if addr[0] in ip_adresses:
+                    if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data['data'][0]}) > 0:
+                        Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data['data'][0]})
+                    logging.debug(f"Machine with ip: {addr[0]} connected")
+                    thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))
+                    thread.start()
+                else:
+                    logging.debug(f"Machine with ip: {addr[0]} not in allowlist, connnection rejected")
+                    Database.replace("Errorlog", {"errorcode": 42, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
+                    "machine": data['data'][0]}, {"machine": data['data'][0], "errorcode": 42})
+                    conn.shutdown(socket.SHUT_RDWR)
+                    conn.close()
             else:
-                print("Wrong Ip")
-                Database.replace("Errorlog", {"errorcode": 42, "errormsg": f"Cannot connect, {addr[0]} not in allowlist",
-                "machine": data['data'][0]}, {"machine": data['data'][0], "errorcode": 42})
+                logging.debug(f"No data key in JSON Object Machine with ip: {addr[0]} rejected")
                 conn.shutdown(socket.SHUT_RDWR)
                 conn.close()
 
