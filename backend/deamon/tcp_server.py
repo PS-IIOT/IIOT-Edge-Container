@@ -20,27 +20,31 @@ class Tcpsocket:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((self.HOST, self.PORT))
     
-    def handle_client(self, conn: socket.socket, data_handler, addr:tuple) ->None:
+    def handle_client(self, conn: socket.socket, data_handler, addr:tuple,initial_data_dict) ->None:
         while True:
             json_string = conn.recv(1024)
-            if not json_string :
-                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": data_dict ['data'][0]})
+            try:
+                data_dict = json.loads(json_string)
+                logging.debug(f"Received Data: {data_dict}")
+                try:
+                    Validator.json_validation(data_dict)
+                    if Database.countDocument("Errorlog", {"errorcode": 40, "machine": data_dict['data'][0]}) > 0:
+                        Database.deleteOne("Errorlog", {"errorcode": 40, "machine": data_dict['data'][0]})
+                except jsonschema.ValidationError as error:
+                    logging.debug(f"No valid Json: {error.message}")
+                    Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Output of Machine: {data_dict['data'][0]}", 
+                    "machine": data_dict['data'][0]}, 
+                    {"machine": data_dict['data'][0], "errorcode": 40})
+                data_handler.handle_json(data_dict , self.timestamp())
+
+            except json.decoder.JSONDecodeError as e:
+                logging.debug(f"JSONDecodeError: {e}")
+          
+                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": initial_data_dict['data'][0]})
                 logging.debug(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
                 conn.close()
                 break
-            try:
-                data_dict = json.loads(json_string)
-                Validator.json_validation(data_dict)
-                if Database.countDocument("Errorlog", {"errorcode": 40, "machine": data_dict ['data'][0]}) > 0:
-                    Database.deleteOne("Errorlog", {"errorcode": 40, "machine": data_dict ['data'][0]})
-            except jsonschema.ValidationError as error:
-                logging.debug(f"No valid Json: {error.message}")
-                Database.replace("Errorlog", {"errorcode": 40, "errormsg": error.message + f", check the JSON Output of Machine: {data_dict ['data'][0]}", 
-                "machine": data_dict ['data'][0]}, 
-                {"machine": data_dict ['data'][0], "errorcode": 40})
-            except json.decoder.JSONDecodeError as er:
-                logging.debug(f"Faild to decode JSON {er}")
-            data_handler.handle_json(data_dict , self.timestamp())
+
             
 
     def listen(self, data_handler) -> None:
@@ -48,9 +52,15 @@ class Tcpsocket:
         logging.debug(f"Server is listening on {self.HOST}:{self.PORT} for incoming connections")
         while True:
             conn, addr = self.server.accept()
-            json_string = conn.recv(1024)
-            logging.debug(json_string)
-            data_dict = json.loads(json_string)
+            
+            try:
+                json_string = conn.recv(1024)
+                if not json_string:
+                    data_dict = None
+                data_dict = json.loads(json_string)
+            except json.decoder.JSONDecodeError as er:
+                logging.debug(f"Faild to decode JSON {er}")     
+            #data_dict = json.loads(json_string)
             data_keys = list(data_dict.keys())
             cursor = Database.findOne("Ip_allowlist", {})
             ip_adresses = cursor["Ip_Adresses"]
@@ -60,7 +70,7 @@ class Tcpsocket:
                     if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data_dict['data'][0]}) > 0:
                         Database.deleteOne("Errorlog", {"errorcode": 42, "machine": data_dict['data'][0]})
                     logging.debug(f"Machine with ip: {addr[0]} connected")
-                    thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr))           #creating a new Thread that handles the connected tpc client
+                    thread = threading.Thread(target=self.handle_client, args=(conn, data_handler, addr, data_dict))           #creating a new Thread that handles the connected tpc client
                     thread.start()
                 else:
                     logging.debug(f"Machine with ip: {addr[0]} not in allowlist, connnection rejected")

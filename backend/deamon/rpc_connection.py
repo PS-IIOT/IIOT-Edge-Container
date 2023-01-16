@@ -1,8 +1,11 @@
+import logging
 import os
 from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 
 class Rpcconnection:
@@ -35,6 +38,7 @@ class Rpcconnection:
     def blxpush_push(self, push_data:dict)->None:
         if not self.sid:
             self.session_create()
+        logging.debug(f"Blxpush Push, with SID: {self.sid}")
         push_json = {"id": str,"jsonrpc": "2.0","method": "call","params":[str, str, str, push_data]}
         push_json["id"] = self.count
         self.increment()
@@ -44,9 +48,12 @@ class Rpcconnection:
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
         if "error" in push_response:
-            print("error message: ", push_response["error"]["message"])
-            self.sid = None
-            self.blxpush_push(push_data)
+            if push_response["error"]["message"] == "Access denied":
+                logging.debug(f"Access Denied, SID: {self.sid}")
+                self.sid = None
+                self.blxpush_push(push_data)
+            logging.debug(f"ERROR IN PUSH RES (Check if blxpush on IRF1000 is connected): error message: {push_response['error']['message']}")
+
 
     def link_state(self)->dict:
         if not self.sid:
@@ -60,6 +67,12 @@ class Rpcconnection:
         push_json["params"][2] = "get"
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
+        if "error" in push_response:
+            if push_response["error"]["message"] == "Access denied":
+                logging.debug(f"Access Denied, SID: {self.sid}")
+                self.sid = None
+                self.link_state()
+            logging.debug(f"ERROR IN PUSH RES (Check if blxpush on IRF1000 is connected): error message: {push_response['error']['message']}")
         return push_response
 
     def wwh_status(self)->dict:
@@ -73,6 +86,12 @@ class Rpcconnection:
         push_json["params"][2] = "status"
         push = requests.post(self.HOST, json=push_json)
         push_response = push.json()
+        if "error" in push_response:
+            if push_response["error"]["message"] == "Access denied":
+                logging.debug(f"Access Denied, SID: {self.sid}")
+                self.sid = None
+                self.wwh_status()
+            logging.debug(f"ERROR IN PUSH RES (Check if blxpush on IRF1000 is connected): error message: {push_response['error']['message']}")
         return push_response
 
     def send_data(self, converted_data)->None:
