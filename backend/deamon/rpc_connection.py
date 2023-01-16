@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 class Rpcconnection:
     def __init__(self)->None:
-        dotenv_path = Path('backend\.env')
+        dotenv_path = Path('backend/.env')
         load_dotenv(dotenv_path=dotenv_path)
         self.HOST = os.getenv('RPC_URL')
         self.user = os.getenv('RPC_USER')
@@ -31,7 +31,6 @@ class Rpcconnection:
         login = requests.post(self.HOST, json=login_json)
         json_response = login.json()
         self.sid = json_response["result"][1]["sid"]
-
 
     def blxpush_push(self, push_data:dict)->None:
         if not self.sid:
