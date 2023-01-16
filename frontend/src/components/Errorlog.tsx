@@ -28,7 +28,7 @@ export const Errorlog = () => {
             <div className="w-full p-2 mx-auto">
                 {errorlog?.length ? (
                     errorlog.map((error) => (
-                        <ErrorItem key={error.id} error={error} />
+                        <ErrorItem key={error.errorcode} error={error} />
                     ))
                 ) : (
                     <div className="border-2 border-gray-400 rounded-md h-20 flex justify-center items-center">
