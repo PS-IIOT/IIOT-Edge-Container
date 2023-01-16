@@ -204,7 +204,7 @@ const CardFooter = ({ machineData }: CardProps) => {
                             onClick={handleOnclick}
                         >
                             <p className="self-center text-white font-bold italic">
-                                system error
+                                machine error
                             </p>
                             <div className="relative m-1">
                                 <div>
@@ -222,7 +222,7 @@ const CardFooter = ({ machineData }: CardProps) => {
                     ) : (
                         <div className="flex justify-center items-center w-full h-10 bg-green-400 rounded-b-md">
                             <span className="font-bold text-white italic">
-                                system ok{' '}
+                                machine ok{' '}
                                 <FontAwesomeIcon icon={faCircleCheck} />
                             </span>
                         </div>

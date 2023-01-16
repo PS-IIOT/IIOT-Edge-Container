@@ -18,7 +18,7 @@ def start():
         machinData = list(Database.find("Machinedata",{}))
         for machine in machinData:
             if(machine["offline"] == False):
-                Database.updateOne("machineData",{"$set":{"offline":True}},{"serialnumber":machine["serialnumber"]})
+                Database.updateOne("Machinedata",{"$set":{"offline":True}},{"serialnumber":machine["serialnumber"]})
     except Exception as e:
         logging.debug(f"{e}")
     sock = deamon.tcp_server.Tcpsocket()

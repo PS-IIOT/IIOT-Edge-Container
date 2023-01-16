@@ -44,14 +44,12 @@ export const User = () => {
     }, 10000);
     return (
         <div className="flex gap-3 justify-center items-center h-full flex-wrap py-3 overflow-y-scroll">
-            {machines ? (
+            {machines?.length ? (
                 machines.map((machine) => (
                     <Card key={machine._id.$oid} machineData={machine} />
                 ))
             ) : (
-                <>
-                    <Card machineData={test} />
-                </>
+                <>{/* <Card machineData={test} /> */}</> // Testmachine
             )}
         </div>
     );

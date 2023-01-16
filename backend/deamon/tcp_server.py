@@ -1,11 +1,13 @@
+import json
+import logging
 import socket
 import threading
 from datetime import *
-from .database import Database
-import json
+
 import jsonschema
 from jsonschema import validate
-import logging
+
+from .database import Database
 from .json_validation import Validator
 
 logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
@@ -21,6 +23,11 @@ class Tcpsocket:
     def handle_client(self, conn: socket.socket, data_handler, addr:tuple) ->None:
         while True:
             json_string = conn.recv(1024)
+            if not json_string :
+                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": data_dict ['data'][0]})
+                logging.debug(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
+                conn.close()
+                break
             try:
                 data_dict = json.loads(json_string)
                 Validator.json_validation(data_dict)
@@ -34,11 +41,7 @@ class Tcpsocket:
             except json.decoder.JSONDecodeError as er:
                 logging.debug(f"Faild to decode JSON {er}")
             data_handler.handle_json(data_dict , self.timestamp())
-            if not data_dict :
-                Database.updateOne("Machinedata", {"$set": {"offline": True}}, {"serialnumber": data_dict ['data'][0]})
-                logging.debug(f"Machinesim with Ip: {addr[0]} and Port: {addr[1]} Disconnected!")
-                conn.close()
-                break
+            
 
     def listen(self, data_handler) -> None:
         self.server.listen()
@@ -49,7 +52,7 @@ class Tcpsocket:
             logging.debug(json_string)
             data_dict = json.loads(json_string)
             data_keys = list(data_dict.keys())
-            cursor = Database.findOne("Ip_allowlist")
+            cursor = Database.findOne("Ip_allowlist", {})
             ip_adresses = cursor["Ip_Adresses"]
             logging.debug(f"Machine with IP-Address: {addr[0]} wants to connect. Checking if IP-Address is in allowlist!")
             if "data" in data_keys:

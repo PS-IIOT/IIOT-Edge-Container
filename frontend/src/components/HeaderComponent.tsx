@@ -5,33 +5,43 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useInterval } from '../hooks/useInterval';
 import { ErrorlogResponse } from '../models/errorlog-response.model';
 import { getAllErrors } from '../services/errorlog.service';
 
-const test = [
-    {
-        _id: {
-            $oid: 'test1',
-        },
-        errormsg: 'testError',
-        errorcode: 41,
-        machine: 'test',
-    },
-    {
-        _id: {
-            $oid: 'test2',
-        },
-        errormsg: 'testError',
-        errorcode: 1,
-        machine: 'test',
-    },
-];
+// const test = [
+//     {
+//         _id: {
+//             $oid: 'test1',
+//         },
+//         errormsg: 'testError',
+//         errorcode: 41,
+//         machine: 'test',
+//     },
+//     {
+//         _id: {
+//             $oid: 'test2',
+//         },
+//         errormsg: 'testError',
+//         errorcode: 1,
+//         machine: 'test',
+//     },
+// ];
 
 export const HeaderComponent = () => {
-    const [allErrors, setallErrors] = useState<ErrorlogResponse[]>(test);
+    const [allErrors, setallErrors] = useState<ErrorlogResponse[]>([]); // set to test-data for testing
     const [wwhStatus, setWwhStatus] = useState<boolean>(true);
+
+    const navigate = useNavigate();
+
+    const navigateHomeAndLogout = () => {
+        return () => {
+            sessionStorage.removeItem('username');
+            sessionStorage.removeItem('password');
+            navigate('/');
+        };
+    };
 
     useEffect(() => {
         void getAllErrors().then((allErrors) => setallErrors(allErrors));
@@ -40,17 +50,23 @@ export const HeaderComponent = () => {
     useInterval(async () => {
         const data = await getAllErrors();
         setallErrors(data);
-        if (data.find((element) => element.errorcode === 41)) {
+        if (data.find((element) => element.errorcode === 43)) {
+            // Here should be checked for Code 41 in future
             setWwhStatus(false);
+        } else {
+            setWwhStatus(true);
         }
     }, 10000);
     return (
         <div className="flex justify-between items-center w-11/12 mx-auto rounded-xl drop-shadow-xl shadow-md shadow-grey h-20 bg-slate-200">
             <div className="w-auto h-auto m-5">
                 <span className="font-bold text-4xl italic text-slate-400 drop-shadow-2xl">
-                    <Link to="/">
+                    <div
+                        onClick={navigateHomeAndLogout()}
+                        className="cursor-pointer"
+                    >
                         <span className="hover:text-slate-500">IRF 1000</span>
-                    </Link>
+                    </div>
                 </span>
             </div>
             <div>

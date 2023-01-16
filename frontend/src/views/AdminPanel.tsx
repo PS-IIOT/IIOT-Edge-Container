@@ -14,11 +14,11 @@ export const AdminPanel = () => {
     }, []);
 
     return (
-        <div className="h-full flex gap-3">
-            <div className="h-full grow-[1]">
+        <div className="grow h-full flex gap-3">
+            <div className="h-full basis-2/5">
                 <Admin></Admin>
             </div>
-            <div className="grow-[8]">
+            <div className="h-full basis-4/5">
                 <Errorlog></Errorlog>
             </div>
         </div>

@@ -33,7 +33,11 @@ export const Admin = () => {
                         setAllowList={setAllowlist}
                     />
                 ) : (
-                    <h1>Loading...</h1>
+                    <div className="border-2 border-gray-400 rounded-md h-20 m-5 flex justify-center items-center">
+                        <div className="text-md text-slate-500 italic">
+                            <span>No Entries</span>
+                        </div>
+                    </div>
                 )}
             </div>
             <div>
@@ -101,20 +105,21 @@ type AddIpProps = {
 };
 
 const AddIp = ({ setAllowList }: AddIpProps) => {
-    const { register, handleSubmit } = useForm<AllowlistRequest>();
+    const { register, handleSubmit, reset } = useForm<AllowlistRequest>();
     const onSubmit = async (data: AllowlistRequest) => {
         const newAllowlist = await insertIP(data);
         if (newAllowlist) {
             setAllowList(newAllowlist);
         }
+        reset();
     };
 
     return (
         <div className="w-full bg-slate-400 rounded-b-md">
             <form onSubmit={handleSubmit(onSubmit)} className="flex">
                 <input
-                    className="flex-1 bg-slate-500 text-white placeholder-slate-100 outline-none focus:bg-slate-500 p-2 rounded-bl-md"
-                    placeholder="IP: xxx.xxx.xxx.xxx"
+                    className="flex-1 bg-slate-500 text-white placeholder-slate-400 placeholder:italic outline-none focus:bg-slate-500 p-2 rounded-bl-md"
+                    placeholder="IP: 0.0.0.0"
                     type="text"
                     {...register('ip', {
                         required: true,
