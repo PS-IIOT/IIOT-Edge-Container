@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useInterval } from '../hooks/useInterval';
 import { Card } from '../components/Card';
-import { getAllMachines } from '../services/machine.service';
+import { useInterval } from '../hooks/useInterval';
 import { MachineResponse } from '../models/machine-response.model';
+import { getAllMachines } from '../services/machine.service';
 
 const test = {
     _id: {
@@ -10,21 +10,24 @@ const test = {
     },
     cycle: 0,
     error: false,
+    // error: true,
     serialnumber: 'Testmachine',
 
-    temp: 0,
+    temp: 50,
     ts: '2022-11-28T20:14:05.077Z',
     uptime: 0,
     warning: false,
+    // warning: true,
     offline: false,
+    // offline: true,
     errorlog: [
-        {
-            _id: {
-                $oid: '123ahuf124',
-            },
-            errormsg: 'TestError',
-            id: 1,
-        },
+        // {
+        //     _id: {
+        //         $oid: '123ahuf124',
+        //     },
+        //     errormsg: 'TestError',
+        //     id: 1,
+        // },
     ],
 };
 export const User = () => {
@@ -40,7 +43,7 @@ export const User = () => {
         setMachines(data);
     }, 10000);
     return (
-        <div className="flex-1 m-5 p-5 overflow-y-auto flex justify-around flex-wrap content-center gap-5">
+        <div className="flex gap-3 justify-center items-center h-full flex-wrap py-3 overflow-y-scroll">
             {machines ? (
                 machines.map((machine) => (
                     <Card key={machine._id.$oid} machineData={machine} />

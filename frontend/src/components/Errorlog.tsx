@@ -1,3 +1,5 @@
+import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useInterval } from '../hooks/useInterval';
 import { ErrorlogResponse } from '../models/errorlog-response.model';
@@ -17,22 +19,24 @@ export const Errorlog = () => {
     }, 10000);
 
     return (
-        <div className="h-4/5 w-8/12 ml-14 mt-8 positon relative flex flex-col justify-arround bg-slate-200 rounded-lg drop-shadow-xl shadow-md shadow-grey">
-            <div
-                id="allowListHeader"
-                className="w-full bg-slate-400 h-12 rounded-t-md justify-center items-center"
-            >
-                <h1 className="flex justify-center items-center text-slate-100 text-3xl m-1">
-                    Error list
+        <div className="grow h-full flex flex-col justify-arround bg-slate-200 rounded-lg drop-shadow-xl shadow-md shadow-grey">
+            <div className="w-full bg-slate-400 h-12 rounded-t-md flex justify-center items-center">
+                <h1 className="text-white text-xl font-bold italic m-1 uppercase">
+                    Errorlist
                 </h1>
             </div>
-            <div className="w-2/4 p-2">
-                {errorlog ? (
+            <div className="w-full p-2 mx-auto">
+                {errorlog?.length ? (
                     errorlog.map((error) => (
-                        <ErrorItem key={error.id} error={error} />
+                        <ErrorItem key={error.errorcode} error={error} />
                     ))
                 ) : (
-                    <p className="justify-center">Loading...</p>
+                    <div className="border-2 border-gray-400 rounded-md h-20 flex justify-center items-center">
+                        <div className="text-md text-slate-500 italic">
+                            <span className="mr-2">No Errors</span>
+                            <FontAwesomeIcon icon={faCircleCheck} />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
@@ -52,7 +56,9 @@ const ErrorItem = ({ error }: ErrorItemProps) => {
                     <span className="text-base text-gray-700 font-normal">
                         ErrorCode:
                     </span>{' '}
-                    <span className="not-italic text-2xl">{error.id}</span>
+                    <span className="not-italic text-2xl">
+                        {error.errorcode}
+                    </span>
                 </div>
             </header>
             <div className="p-2">

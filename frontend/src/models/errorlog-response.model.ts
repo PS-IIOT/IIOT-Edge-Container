@@ -14,6 +14,6 @@ export type ErrorlogResponse = {
         $oid: string;
     };
     errormsg: string;
-    id: number;
+    errorcode: number;
     machine?: string;
 };
