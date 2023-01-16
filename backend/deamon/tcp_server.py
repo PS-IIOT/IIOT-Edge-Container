@@ -7,6 +7,7 @@ import jsonschema
 from jsonschema import validate
 import logging
 from .json_validation import Validator
+
 logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 

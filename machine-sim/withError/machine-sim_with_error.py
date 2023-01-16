@@ -12,16 +12,16 @@
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
+import json
 import signal
 import socket
 import sys
 import threading
 import time
-import json
 
 
 class MachineSim:
-    def __init__(self, ip="172.17.0.3", port=7002, speed=10):
+    def __init__(self, ip="127.0.0.1", port=7002, speed=10):
         self.uptime = 0
         self.serverip = ip
         self.serverport = port
@@ -169,7 +169,7 @@ class Ui:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ip', action='store', type=str, dest="ip",
-                        default="172.17.0.3", help='Target IP of data collection server')
+                        default="127.0.0.1", help='Target IP of data collection server')
     parser.add_argument('--port', action='store', type=str, dest="port",
                         default="7002", help='Target TCP Port of data collection server')
     parser.add_argument('--serial', action='store', type=str, dest="serial",

@@ -1,9 +1,12 @@
-import deamon.data_handler
-import deamon.tcp_server
-import deamon.rpc_connection
-from .database import Database
-import pymongo
 import logging
+
+import deamon.data_handler
+import deamon.rpc_connection
+import deamon.tcp_server
+import pymongo
+
+from .database import Database
+
 logging.basicConfig(level=logging.DEBUG, format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
 def start():

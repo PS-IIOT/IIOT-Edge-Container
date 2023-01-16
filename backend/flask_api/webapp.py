@@ -1,18 +1,17 @@
-from flask import Flask, request, Response, make_response, send_from_directory
-from flask_swagger_ui import get_swaggerui_blueprint
-from flask_pymongo import PyMongo
-from bson.json_util import dumps, loads
-from bson import json_util
-from flask_cors import CORS
-from flask import request
-from flask import Response
-from dotenv import load_dotenv
-from pathlib import Path
-import os
-import pymongo
 import logging
-from functools import wraps
+import os
 import re
+from functools import wraps
+from pathlib import Path
+
+import pymongo
+from bson import json_util
+from bson.json_util import dumps, loads
+from dotenv import load_dotenv
+from flask import Flask, Response, make_response, request, send_from_directory
+from flask_cors import CORS
+from flask_pymongo import PyMongo
+from flask_swagger_ui import get_swaggerui_blueprint
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
@@ -51,9 +50,9 @@ def send_static(path):
     return send_from_directory('static', path)
 
 
-swaggerui_blueprint = get_swaggerui_blueprint('/docs', '/static/swagger.json')
+swaggerui_blueprint = get_swaggerui_blueprint('/api/v1/docs', '/static/api-v1-swagger.json')
 
-app.register_blueprint(swaggerui_blueprint, url_prefix='/docs')
+app.register_blueprint(swaggerui_blueprint, url_prefix='/api/v1/docs')
 
 
 @app.route('/api/v1/machines', methods=['GET'])

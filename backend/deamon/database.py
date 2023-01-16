@@ -1,7 +1,8 @@
-from dotenv import load_dotenv
-from pathlib import Path
-import pymongo
 import os
+from pathlib import Path
+
+import pymongo
+from dotenv import load_dotenv
 
 
 class Database(object):
