@@ -50,7 +50,7 @@ class Tcpsocket:
             data_keys = list(data_dict.keys())
             cursor = Database.findOne("Ip_allowlist")
             ip_adresses = cursor["Ip_Adresses"]
-            logging.debug(f"Machine with IP-Address: {addr[0]} wants to connected. Checking if IP-Address is in allowlist!")
+            logging.debug(f"Machine with IP-Address: {addr[0]} wants to connect. Checking if IP-Address is in allowlist!")
             if "data" in data_keys:
                 if addr[0] in ip_adresses:
                     if Database.countDocument("Errorlog", {"errorcode": 42, "machine": data_dict['data'][0]}) > 0:
