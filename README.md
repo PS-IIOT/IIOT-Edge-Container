@@ -1,6 +1,11 @@
 # iiot-edge-container
 
-## Getting started
+## Getting Started
+
+In den folgenden Sections werden die wichtigsten Komponenten für die Entwicklung und
+Ausführung des Projekts beschrieben.
+
+## Githooks
 
 ### Activate global git hooks in .githooks directory
 
@@ -15,7 +20,35 @@ Dadurch wird der Hookpfad der lokalen Gitinstallation umkonfiguriert.
 Anschliessend wird der `commit-msg` hook bei jedem commit ausgefuehrt.
 Dieser kontrolliert die Einhaltung der commit-message Regeln.
 
-### Docker Dev-Environment
+## Environment Variables
+
+Im Frontend und Backend werden für development und production code zwei environment files benötigt.
+
+### **Backend**
+
+`backend/.env` for development
+
+`backend/.env.production` for production
+
+```properties
+RPC_URL=
+RPC_USER=
+RPC_PASSWORD=
+
+MONGO_URI=
+```
+
+### **Frontend**
+
+`frontend/.env` for development
+
+`frontend/.env.production` for production
+
+```properties
+VITE_BACKEND_API_URL=
+```
+
+## Docker Dev-Environment
 
 folgender Code muss local im Rootverzeichis gestartet werden. In der Folge starten 2 Docker-Container.
 Zum einen ein MongoDB Container mit unserer Datenbank, sowie ein Fronendcontainer, der den aktuellen
