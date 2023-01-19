@@ -11,6 +11,8 @@ services:
             - frontend
         depends_on:
             - backend
+        environment:
+            - TZ=Europe/Berlin
 
     backend:
         build:
@@ -28,6 +30,8 @@ services:
         networks:
             - frontend
             - backend
+        environment:
+            - TZ=Europe/Berlin
 
     mongodb:
         image: mongo:latest
@@ -37,6 +41,8 @@ services:
             - mongodb_data:/data/db
         networks:
             - backend
+        environment:
+            - TZ=Europe/Berlin
 
 volumes:
     mongodb_data:
