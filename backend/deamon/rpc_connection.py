@@ -7,6 +7,14 @@ from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.DEBUG,format='%(module)s:%(asctime)s:%(levelname)s:%(message)s')
 
+# !!! TODO in future: add aiohttp for async requests !!!
+# so far this is a syncronous implementation with python requests
+# to make the program asyncronous, aiohttp should be used
+# this would allow to send multiple requests at the same time
+# if the IRF1000 is not reachable, the program will wait for the timeout
+# this is not a problem for the current use case, but should be changed in the future
+# to make the program more robust and scalable for multiple IRF1000s and other devices
+
 
 class Rpcconnection:
     def __init__(self)->None:
