@@ -1,92 +1,105 @@
 # iiot-edge-container
 
+## Getting Started
 
+In den folgenden Sections werden die wichtigsten Komponenten für die Entwicklung und
+Ausführung des Projekts beschrieben.
 
-## Getting started
+## Githooks
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Activate global git hooks in .githooks directory
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Folgender Code muss local ausgefuehrt werden, um die hooks aus dem .githooks directory zu aktivieren.
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.hs-esslingen.de/lestit01/iiot-edge-container.git
-git branch -M main
-git push -uf origin main
+```bash
+git config core.hooksPath .githooks/
 ```
 
-## Integrate with your tools
+Dadurch wird der Hookpfad der lokalen Gitinstallation umkonfiguriert.
 
-- [ ] [Set up project integrations](https://gitlab.hs-esslingen.de/lestit01/iiot-edge-container/-/settings/integrations)
+Anschliessend wird der `commit-msg` hook bei jedem commit ausgefuehrt.
+Dieser kontrolliert die Einhaltung der commit-message Regeln.
 
-## Collaborate with your team
+## Environment Variables
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Im Frontend und Backend werden für development und production code zwei environment files benötigt.
 
-## Test and Deploy
+### **Backend**
 
-Use the built-in continuous integration in GitLab.
+`backend/.env` for development
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+`backend/.env.production` for production
 
-***
+```properties
+RPC_URL=
+RPC_USER=
+RPC_PASSWORD=
 
-# Editing this README
+MONGO_URI=
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### **Frontend**
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+`frontend/.env` for development
 
-## Name
-Choose a self-explaining name for your project.
+`frontend/.env.production` for production
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```properties
+VITE_BACKEND_API_URL=
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Docker Dev-Environment
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+folgender Code muss local im Rootverzeichis gestartet werden. In der Folge starten 2 Docker-Container.
+Zum einen ein MongoDB Container mit unserer Datenbank, sowie ein Fronendcontainer, der den aktuellen
+Stand des Reactclients anzeigt.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```bash
+docker compose up -d
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### MachineSIM Docker
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Folgende Befehle müssen ausgeführt werden um einen MaschinenSIM als Container zu starten:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+1. Bauen der Images für Funktionalen und Error Simulator:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+**Funktional-SIM:**
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+docker build -t machinesim machine-sim/
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+**Error-SIM:**
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+docker build -t machinesimerror machine-sim/withError/
+```
 
-## License
-For open source projects, say how it is licensed.
+2. Starten eines Containers für die LOKALE Umgebung:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Funktional-SIM:**
+
+```bash
+docker run -td --net="host" machinesim --serial <MY-MACHINE-NAME>
+```
+
+**Error-SIM:**
+
+```bash
+docker run -td --net="host" machinesimerror --serial <MY-MACHINE-NAME>
+```
+
+3. Starten eines Containers gegen die IRF-1000, vorraussetzung ist auf einem der LAN Ports der Firewall verbunden zu sein.:
+
+**Funktional-SIM:**
+
+```bash
+docker run -td machinesim --ip 192.168.0.254 --serial <MY-MACHINE-NAME>
+```
+
+**Error-SIM:**
+
+```bash
+docker run -td machinesimerror --ip 192.168.0.254 --serial <MY-MACHINE-NAME>
+```

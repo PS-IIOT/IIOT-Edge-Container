@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+    frontend:
+        image: adstec/priv:iiot-frontend-arm32v7
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - 8088:8088
+        networks:
+            - frontend
+        depends_on:
+            - backend
+        platform: linux/arm/v7
+
+    backend:
+        image: adstec/priv:iiot-backend-arm32v7
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - 5000:5000
+            - 7002:7002
+        env_file:
+            - ./backend/.env.production
+
+        depends_on:
+            - mongodb
+        networks:
+            - frontend
+            - backend
+        platform: linux/arm/v7
+
+    mongodb:
+        image: iondv/arm32-mongodb:latest
+        command: mongod  --port 27017 --storageEngine=mmapv1 --dbpath /data/db
+        volumes:
+            - mongodb_data:/data/db
+        networks:
+            - backend
+
+volumes:
+    mongodb_data:
+        external: false
+
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge

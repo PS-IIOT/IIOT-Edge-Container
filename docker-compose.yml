@@ -1,20 +1,55 @@
-version: "3.9"
+version: '3.9'
 
 services:
-  machine-sim:
-    build:
-        context: ./machine-sim/
-    network_mode: bridge # use default bridge network to get defualt ip adress space 172.17.0.X
-    stdin_open: true # docker run -i
-    tty: true # docker run -t
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - 8088:8088
+        networks:
+            - frontend
+        depends_on:
+            - backend
+        environment:
+            - TZ=Europe/Berlin
 
-  tcp-server:
-    build:
-        context: ./tcp-server/
-    depends_on:
-      - machine-sim
-    expose:
-      - 7002
-    network_mode: bridge # use default bridge network to get defualt ip adress space 172.17.0.X
-    stdin_open: true # docker run -i
-    tty: true # docker run -t
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - 5000:5000
+            - 7002:7002
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        env_file:
+            - ./backend/.env
+        depends_on:
+            - mongodb
+        networks:
+            - frontend
+            - backend
+        environment:
+            - TZ=Europe/Berlin
+
+    mongodb:
+        image: mongo:latest
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb_data:/data/db
+        networks:
+            - backend
+        environment:
+            - TZ=Europe/Berlin
+
+volumes:
+    mongodb_data:
+        external: false
+
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
