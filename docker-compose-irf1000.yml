@@ -40,17 +40,6 @@ services:
         networks:
             - backend
 
-    # machinesim:
-    #   image: adstec/priv:iiot-machine-sim-arm32v7
-    #   build:
-    #     context: ./machine-sim
-    #     dockerfile: Dockerfile
-    #   depends_on:
-    #     - backend
-    #   networks:
-    #     - backend
-    #   platform: linux/arm/v7
-
 volumes:
     mongodb_data:
         external: false
