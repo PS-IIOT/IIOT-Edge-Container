@@ -21,7 +21,9 @@ class Datahandler:
     def conversion(self, timestamp:str)->None:
         data_dict = self.que.popleft()
         data_dict_rpc = self.data_converter.conversion_rpc(timestamp, data_dict)
+        logging.debug("Datadictionary rpc"+ str(data_dict_rpc))
         data_dict_db = self.data_converter.conversion_db(timestamp, data_dict)
+        logging.debug("Datadictionary db"+ str(data_dict_db))
         try:
             wwh_status = self.rpc.wwh_status()
             link_state = self.rpc.link_state()
@@ -34,10 +36,13 @@ class Datahandler:
                 Database.replace("Errorlog", {"errorcode": 41, "errormsg": "WWH Status "+ wwh_status["result"][1]["status"]["link"]+" check your WWH Connection","machine":"IRF 1000"}, {"errorcode": 41})
             else:
                 Database.deleteOne("Errorlog", {"errorcode": 41})
+        except Exception as e:
+            logging.debug(f'{e}')    
+        try:
             self.rpc.send_data(data_dict_rpc)
         except Exception as e:
             logging.debug(f"RPC Failed to send Data {e}")
         try:
             Database.replace("Machinedata", data_dict_db,{"serialnumber":data_dict_db["serialnumber"]})
-        except TypeError:
-            None
+        except TypeError as te:
+            logging.debug(f'{te}')
