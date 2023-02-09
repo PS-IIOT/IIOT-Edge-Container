@@ -5,6 +5,7 @@
 #project specific changes
 machine-sim/machine-state.json
 backend/.env
+backend/.env.production
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
